@@ -16,11 +16,16 @@ namespace Business.Effects
 
         public IEnumerable<IEffect<T>> Effects => _effects;
         
+        public event EventHandler<IEffect<T>> EffectAdded;
+
+        public event EventHandler<IEffect<T>> EffectRemoved;
+        
         public void AddEffect(IEffect<T> effect)
         {
             _effects.Add(effect);
             EffectAdded?.Invoke(this, effect);
             
+            effect.EffectEnded += OnEffectEnded;
             if (_effectEntity is not null)
                 effect.Apply(_effectEntity);
         }
@@ -33,9 +38,10 @@ namespace Business.Effects
             if (_effectEntity is not null)
                 effect.Misapply(_effectEntity);
         }
-
-        public event EventHandler<IEffect<T>> EffectAdded;
-
-        public event EventHandler<IEffect<T>> EffectRemoved;
+        
+        private void OnEffectEnded(object sender, EventArgs e)
+        {
+            RemoveEffect(sender as IEffect<T>);
+        }
     }
 }

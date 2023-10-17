@@ -23,6 +23,8 @@ namespace Business.HealthPoints
         
         private int _defaultPoints;
 
+        private bool _isAlive = true;
+
         public Health(int defaultPoints, int minPointsAfterMultiply = 1, int maxPointsAfterMultiply = int.MaxValue)
         {
             _defaultPoints = defaultPoints;
@@ -43,21 +45,40 @@ namespace Business.HealthPoints
                 int oldHealth = _currentPoints;
                 _currentPoints = Math.Clamp(value, 0, MaxPoints);
                 CurrentHealthUpdated?.Invoke(this, new HealthUpdatedArgs(oldHealth, _currentPoints, this));
+                if (oldHealth > 0 && _currentPoints == 0)
+                {
+                    _isAlive = false;
+                    Died?.Invoke(this, EventArgs.Empty);
+                }
             } 
         }
     
         public int DefaultPoints => _defaultPoints;
 
+        public bool IsAlive => _isAlive;
+
         public EffectsContainer<Health> Effects => _effects;
 
         public event EventHandler<HealthUpdatedArgs> CurrentHealthUpdated;
 
-        public event EventHandler<HealthUpdatedArgs> MaxHealthUpdated; 
+        public event EventHandler<HealthUpdatedArgs> MaxHealthUpdated;
+
+        public event EventHandler Died;
+
+        public event EventHandler Resurrected;
 
         public void SetDefaultMaxPoints(int defaultPoints)
         {
             _defaultPoints = defaultPoints;
             RecountMaxPoints();
+        }
+
+        public void Resurrect()
+        {
+            _isAlive = true;
+            _currentPoints = MaxPoints;
+            CurrentHealthUpdated?.Invoke(this, new HealthUpdatedArgs(0, _currentPoints, this));
+            Resurrected?.Invoke(this, EventArgs.Empty);
         }
     
         public void AddMultiplier(IValueMultiplier multiplier)
