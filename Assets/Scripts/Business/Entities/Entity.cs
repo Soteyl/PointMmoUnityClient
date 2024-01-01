@@ -14,10 +14,15 @@ namespace Business.Entities
 
         protected IWeapon _weapon;
 
+        private IValueMultiplier _deadSpeedMultiplier = new DefaultValueMultiplier(0);
+
         public Entity()
         {
             _health = new Health(new MultipliedValue(100, min: 1));
             _speed = new MultipliedValue(3.5f, min: 0f);
+
+            _health.Died += (_, _) => _speed.AddMultiplier(_deadSpeedMultiplier);
+            _health.Resurrected += (_, _) => _speed.RemoveMultiplier(_deadSpeedMultiplier);
         }
 
         public Health Health => _health;

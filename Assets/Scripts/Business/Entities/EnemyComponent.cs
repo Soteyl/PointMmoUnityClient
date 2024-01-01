@@ -1,6 +1,5 @@
 ﻿using System;
 using Business.HealthPoints;
-using Components;
 using UnityEngine;
 
 namespace Business.Entities
@@ -14,7 +13,7 @@ namespace Business.Entities
 
         private void HealthOnDied(object sender, EventArgs e)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
 
         private void OnCollisionEnter(Collision other)

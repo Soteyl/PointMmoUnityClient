@@ -8,6 +8,9 @@ namespace Business.Entities
     {
         public Entity Entity { get; }
 
+        [ShowInInspector]
+        public float CurrentHealth => Entity.Health.Current;
+
         [OdinSerialize]
         private EntityCharacteristic Characteristic { get; set; }
 
