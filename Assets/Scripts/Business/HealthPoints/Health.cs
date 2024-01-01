@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Business.Effects;
 using Business.Entities;
 using Business.Multipliers;
@@ -9,55 +7,44 @@ namespace Business.HealthPoints
 {
     public class Health
     {
-        private readonly List<IValueMultiplier> _multipliers = new();
+        private float _currentPoints;
 
-        private readonly EffectsContainer<Health> _effects;
+        private readonly IEffectsContainer<Health> _effects;
         
-        private readonly int _minPointsAfterMultiply;
-        
-        private readonly int _maxPointsAfterMultiply;
-
         private readonly Entity _entity;
-
-        private int _currentPoints;
-        
-        private int _defaultPoints;
 
         private bool _isAlive = true;
 
-        public Health(int defaultPoints, int minPointsAfterMultiply = 1, int maxPointsAfterMultiply = int.MaxValue)
+        public Health(IMultipliedValue maxHealth)
         {
-            _defaultPoints = defaultPoints;
-            _minPointsAfterMultiply = minPointsAfterMultiply;
-            _maxPointsAfterMultiply = maxPointsAfterMultiply;
+            Max = maxHealth;
+            
+            Max.ValueChanged += (sender, f) => MaxHealthUpdated?.Invoke(this, new HealthUpdatedArgs(f.OldValue, f.NewValue, this));
+            
             _effects = new EffectsContainer<Health>(this);
-            MaxPoints = _defaultPoints;
-            _currentPoints = MaxPoints;
         }
-        
-        public int MaxPoints { get; private set; }
 
-        public int CurrentPoints
+        public float Current
         {
-            get => Math.Clamp(_currentPoints, 0, MaxPoints);
+            get => Math.Clamp(_currentPoints, 0, Max.GetValue());
             set
             {
-                int oldHealth = _currentPoints;
-                _currentPoints = Math.Clamp(value, 0, MaxPoints);
+                float oldHealth = _currentPoints;
+                _currentPoints = Math.Clamp(value, 0, Max.GetValue());
                 CurrentHealthUpdated?.Invoke(this, new HealthUpdatedArgs(oldHealth, _currentPoints, this));
                 if (oldHealth > 0 && _currentPoints == 0)
                 {
                     _isAlive = false;
                     Died?.Invoke(this, EventArgs.Empty);
                 }
-            } 
+            }
         }
-    
-        public int DefaultPoints => _defaultPoints;
+        
+        public IMultipliedValue Max { get; }
 
         public bool IsAlive => _isAlive;
 
-        public EffectsContainer<Health> Effects => _effects;
+        public IEffectsContainer<Health> Effects => _effects;
 
         public event EventHandler<HealthUpdatedArgs> CurrentHealthUpdated;
 
@@ -67,38 +54,12 @@ namespace Business.HealthPoints
 
         public event EventHandler Resurrected;
 
-        public void SetDefaultMaxPoints(int defaultPoints)
-        {
-            _defaultPoints = defaultPoints;
-            RecountMaxPoints();
-        }
-
         public void Resurrect()
         {
             _isAlive = true;
-            _currentPoints = MaxPoints;
+            _currentPoints = Max.GetValue();
             CurrentHealthUpdated?.Invoke(this, new HealthUpdatedArgs(0, _currentPoints, this));
             Resurrected?.Invoke(this, EventArgs.Empty);
-        }
-    
-        public void AddMultiplier(IValueMultiplier multiplier)
-        {
-            _multipliers.Add(multiplier);
-            RecountMaxPoints();
-        }
-    
-        public void RemoveMultiplier(IValueMultiplier multiplier)
-        {
-            _multipliers.Remove(multiplier);
-            RecountMaxPoints();
-        }
-
-        private void RecountMaxPoints()
-        {
-            int oldHealth = MaxPoints;
-            MaxPoints = Math.Clamp(_multipliers.Aggregate(_defaultPoints,
-                (current, healthMultiplier) => (int)Math.Round(healthMultiplier.Apply(current))), _minPointsAfterMultiply, _maxPointsAfterMultiply);
-            MaxHealthUpdated?.Invoke(this, new HealthUpdatedArgs(oldHealth, MaxPoints, this));
         }
     }
 }

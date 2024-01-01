@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Business.Effects
 {
-    public class EffectsContainer<T> where T: class
+    public class EffectsContainer<T>: IEffectsContainer<T>
+        where T: class
     {
         private readonly T _effectEntity;
         

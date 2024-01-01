@@ -2,7 +2,7 @@
 using Sirenix.Serialization;
 using UnityEngine;
 
-namespace Components
+namespace Business.HealthPoints
 {
     [RequireComponent(typeof(BoxCollider))]
     public class SpawnPointComponent : SerializedMonoBehaviour

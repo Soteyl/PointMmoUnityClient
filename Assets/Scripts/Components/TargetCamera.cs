@@ -14,7 +14,7 @@ namespace Components
         {
             if (target)
             {
-                Vector3 targetPosition = target.position + (target.rotation * distance) + offset;
+                Vector3 targetPosition = target.position + offset + distance;
                 transform.position = Vector3.Lerp(transform.position, targetPosition, cameraSpeed * Time.deltaTime);
 
                 Quaternion targetRotation = Quaternion.LookRotation(target.position + offset - transform.position, Vector3.up);

@@ -1,6 +1,6 @@
-using Business.Entities;
+using Components;
 
-namespace Components
+namespace Business.Entities
 {
     public class CharacterComponent : EntityComponent
     {

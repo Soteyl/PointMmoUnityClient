@@ -1,9 +1,9 @@
-﻿using Business.HealthPoints;
+﻿using Business.Entities;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using TMPro;
 
-namespace Components
+namespace Business.HealthPoints
 {
     public class HealthDisplayComponent : SerializedMonoBehaviour
     {
@@ -16,22 +16,18 @@ namespace Components
         public TextMeshProUGUI Text { get; set; }
 
         [ShowInInspector] [ShowIf(nameof(EntityComponent))]
-        public int CurrentHealth => Health?.CurrentPoints ?? 0;
+        public float CurrentHealth => Health?.Current ?? 0;
 
         [ShowInInspector] [ShowIf(nameof(EntityComponent))]
-        public int MaxHealth => Health?.MaxPoints ?? 0;
+        public float MaxHealth => Health?.Max.GetValue() ?? 0;
 
         [OdinSerialize] [ShowIf(nameof(EntityComponent))]
-        public int DefaultMaxHealth
-        {
-            get => Health?.DefaultPoints ?? 100;
-            set => Health?.SetDefaultMaxPoints(value);
-        }
+        public float DefaultMaxHealth => Health?.Max.DefaultValue ?? 100;
 
         [Button] [ShowIf(nameof(EntityComponent))]
         public void Heal()
         {
-            Health.CurrentPoints = Health.MaxPoints;
+            Health.Current = Health.Max.GetValue();
         }
 
         private void Start()
@@ -74,7 +70,7 @@ namespace Components
 
         private void UpdateText(Health health)
         {
-            Text.text = $"{health.CurrentPoints}/{health.MaxPoints}";
+            Text.text = $"{(int)health.Current}/{(int)health.Max.GetValue()}";
         }
     }
 }
