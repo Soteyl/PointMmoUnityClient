@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Business.Multipliers
@@ -21,6 +22,8 @@ namespace Business.Multipliers
             _min = min;
             _currentValue = defaultValue;
         }
+        
+        public static implicit operator float(MultipliedValue multipliedValue) => multipliedValue.GetValue();
 
         public IEnumerable<IValueMultiplier> Multipliers => _multipliers;
         
@@ -61,5 +64,7 @@ namespace Business.Multipliers
                 NewValue = _currentValue
             });
         }
+
+        public override string ToString() => _currentValue.ToString(CultureInfo.InvariantCulture);
     }
 }

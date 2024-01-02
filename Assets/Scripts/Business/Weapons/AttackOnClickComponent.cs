@@ -5,6 +5,7 @@ using Components.Interacting;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+#pragma warning disable CS4014
 
 namespace Business.Weapons
 {

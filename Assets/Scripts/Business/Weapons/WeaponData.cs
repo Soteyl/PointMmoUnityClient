@@ -15,6 +15,8 @@ namespace Business.Weapons
     [CreateAssetMenu(fileName = "New Weapon", menuName = "Entities/Weapon")]
     public class WeaponData: SerializedScriptableObject, IWeapon
     {
+        private const int CoyoteTimeMilliseconds = 200;
+        
         [OdinSerialize]
         public float Distance { get; set; }
         
@@ -29,6 +31,12 @@ namespace Business.Weapons
         
         [OdinSerialize]
         public int MaxDamage { get; set; }
+        
+        public bool IsReloading => _stopwatch.ElapsedMilliseconds < Delay;
+        
+        public bool IsPendingToAttack { get; private set; }
+        
+        private float Delay => 1000 / Speed;
 
         private Stopwatch _stopwatch = new();
 
@@ -41,22 +49,31 @@ namespace Business.Weapons
 
         public virtual async Task AttackAsync(Entity owner, Entity target, CancellationToken cancellationToken = default)
         {
-            float delay = 1000 / Speed;
-            if (_stopwatch.ElapsedMilliseconds < delay)
+            if (IsPendingToAttack || _stopwatch.ElapsedMilliseconds < Delay - CoyoteTimeMilliseconds)
+                return;
+            
+            if (IsReloading)
             {
-                await Task.Delay((int)Mathf.Round(delay - _stopwatch.ElapsedMilliseconds), cancellationToken);
+                IsPendingToAttack = true;
+                await Task.Delay((int)Mathf.Round(Delay - _stopwatch.ElapsedMilliseconds), cancellationToken);
             }
 
             int damage = _random.Next(MinDamage, MaxDamage);
 
             if (cancellationToken.IsCancellationRequested)
+            {
+                IsPendingToAttack = false;
                 return;
+            }
             
             target.Health.Effects.AddEffect(new InstantDamageEffect(damage));
             
             Attacked?.Invoke(this, new WeaponAttackedEventArgs(target, owner, this, damage));
             
-            Debug.Log("Attacked!");
+            _stopwatch.Restart();
+            IsPendingToAttack = false;
+            
+            Debug.Log($"Attacked with {damage} hp! Current target hp: {target.Health.Current}/{target.Health.Max}");
         }
 
         public event EventHandler<WeaponAttackedEventArgs> Attacked;

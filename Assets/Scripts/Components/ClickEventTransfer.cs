@@ -39,7 +39,6 @@ namespace Components
 
             var mouseClickPosition = Mouse.current.position.ReadValue();
             Ray ray = Camera.main.ScreenPointToRay(mouseClickPosition);
-            RaycastHit hit;
 
             var raycast = Physics.RaycastAll(ray, Mathf.Infinity, _interactableLayer)
                 .Select(x => new { Point = x.point, Interactable = x.transform.GetComponent<InteractableObject>() }).OrderBy(x => x.Interactable.Type).FirstOrDefault();
