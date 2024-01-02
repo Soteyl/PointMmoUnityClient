@@ -38,7 +38,7 @@ namespace Business.Weapons
         {
             var position = targetEntity.transform.position;
             Vector3 directionToEntity = (position - Character.transform.position).normalized;
-            Vector3 destinationPoint = position - directionToEntity * (Math.Max(Character.Entity.Weapon.Distance, _movementComponent.StoppingDistance) - 0.5f);
+            Vector3 destinationPoint = position - directionToEntity * (Math.Max(Character.Entity.Weapon.WeaponData.Distance, _movementComponent.StoppingDistance) - 0.5f);
             return destinationPoint;
         }
     }

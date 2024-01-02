@@ -3,6 +3,7 @@ using System.Collections;
 using Business.Entities;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 namespace Components
 {
@@ -11,7 +12,7 @@ namespace Components
         private Coroutine _moveCoroutine;
         
         [SerializeField]
-        private CharacterComponent character;
+        private EntityComponent entity;
         
         [SerializeField]
         private NavMeshAgent navMeshAgent;
@@ -22,10 +23,10 @@ namespace Components
 
         private void Awake()
         {
-            navMeshAgent.speed = character.Entity.Speed.GetValue();
+            navMeshAgent.speed = entity.Entity.Speed.GetValue();
             
-            character.Entity.Health.Died += OnCharacterDied;
-            character.Entity.Health.Resurrected += OnCharacterResurrected;
+            entity.Entity.Health.Died += OnCharacterDied;
+            entity.Entity.Health.Resurrected += OnCharacterResurrected;
         }
 
         public void MoveTo(Vector3 position)

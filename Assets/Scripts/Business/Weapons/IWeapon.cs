@@ -7,7 +7,7 @@ namespace Business.Weapons
 {
     public interface IWeapon
     {
-        float Distance { get; }
+        WeaponData WeaponData { get; }
         
         Task AttackAsync(Entity owner, Entity target, CancellationToken cancellationToken = default);
 
