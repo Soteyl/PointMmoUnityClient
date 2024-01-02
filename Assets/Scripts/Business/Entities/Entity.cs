@@ -42,7 +42,8 @@ namespace Business.Entities
 
         public async Task AttackAsync(Entity entity, CancellationToken cancellationToken = default)
         {
-            await _weapon.AttackAsync(this, entity, cancellationToken);
+            if (Health.IsAlive)
+                await _weapon.AttackAsync(this, entity, cancellationToken);
         }
     }
 }

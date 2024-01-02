@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using UnityEngine;
 
 namespace Business.Entities
 {
@@ -11,6 +13,12 @@ namespace Business.Entities
 
         private void HealthOnDied(object sender, EventArgs e)
         {
+            StartCoroutine(DieAfterAll());
+        }
+
+        private IEnumerator DieAfterAll()
+        {
+            yield return new WaitForFixedUpdate();
             Destroy(gameObject);
         }
     }
