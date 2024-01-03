@@ -9,25 +9,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 104efb17556647eb821fb86ceb669456, type: 3}
-  m_Name: Character
+  m_Script: {fileID: 11500000, guid: b3238eebffe14b199d3be98016e8e242, type: 3}
+  m_Name: EnemyWeapon
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: e839d9eb1afd5534d81896ac49ebaff8, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
+    - Name: Distance
+      Entry: 4
+      Data: 2
     - Name: Speed
       Entry: 4
-      Data: 3.5
-    - Name: MaxHealth
+      Data: 2
+    - Name: StayTime
+      Entry: 4
+      Data: 1
+    - Name: MinDamage
       Entry: 3
-      Data: 100
-    - Name: DefaultWeaponData
-      Entry: 10
-      Data: 0
+      Data: 5
+    - Name: MaxDamage
+      Entry: 3
+      Data: 15

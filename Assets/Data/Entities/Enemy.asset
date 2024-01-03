@@ -16,7 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: e839d9eb1afd5534d81896ac49ebaff8, type: 2}
+    - {fileID: 11400000, guid: d8f6c2ab10c2b4c1da95ae2fe27dd8e0, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -24,7 +24,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Speed
       Entry: 4
-      Data: 0.8
+      Data: 3
     - Name: MaxHealth
       Entry: 3
       Data: 80
