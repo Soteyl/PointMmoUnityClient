@@ -1,9 +1,9 @@
 using System;
-using Business.Entities;
+using Components.Entity.Character;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Components.Enemy
+namespace Components.Entity.Enemy
 {
     public class TriggerCharacterEnemyComponent: SerializedMonoBehaviour
     {

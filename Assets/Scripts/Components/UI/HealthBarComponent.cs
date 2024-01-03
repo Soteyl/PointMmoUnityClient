@@ -1,5 +1,5 @@
-using Business.Entities;
 using Business.HealthPoints;
+using Components.Entity;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;

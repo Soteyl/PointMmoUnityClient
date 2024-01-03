@@ -2,7 +2,7 @@ using Components.Interacting;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
-namespace Components
+namespace Components.Entity.Character
 {
     public class MovementOnClickComponent : SerializedMonoBehaviour
     {

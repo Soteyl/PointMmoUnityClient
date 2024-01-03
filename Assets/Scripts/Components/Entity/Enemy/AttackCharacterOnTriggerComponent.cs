@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using Business.Entities;
+using Components.Entity.Character;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
-namespace Components.Enemy
+namespace Components.Entity.Enemy
 {
     public class AttackCharacterOnTriggerComponent: SerializedMonoBehaviour
     {
@@ -44,13 +45,9 @@ namespace Components.Enemy
                 if (!character.Entity.Health.IsAlive || !_enemyComponent.Entity.Health.IsAlive) yield break;
                 if (Vector3.Distance(_enemyComponent.transform.position, character.transform.position) > _enemyComponent.Entity.Weapon.WeaponData.Distance)
                 {
-                    _enemyMovement.MoveToAndThen(GetPointNearTarget(character), status =>
-                    {
-                        _attackCoroutine = StartCoroutine(AttackCharacter(character));
-                    } );
-                    yield break;
+                    _enemyMovement.MoveTo(GetPointNearTarget(character));
                 }
-                _enemyComponent.Entity.AttackAsync(character.Entity);
+                else _enemyComponent.Entity.AttackAsync(character.Entity);
             }
         }
         

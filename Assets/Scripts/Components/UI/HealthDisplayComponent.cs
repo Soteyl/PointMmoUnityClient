@@ -1,9 +1,10 @@
-﻿using Business.Entities;
+﻿using Business.HealthPoints;
+using Components.Entity;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using TMPro;
 
-namespace Business.HealthPoints
+namespace Components.UI
 {
     public class HealthDisplayComponent : SerializedMonoBehaviour
     {

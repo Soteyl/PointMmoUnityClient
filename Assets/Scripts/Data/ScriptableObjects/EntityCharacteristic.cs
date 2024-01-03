@@ -22,6 +22,7 @@ namespace Data.ScriptableObjects
         {
             entity.Health.Max.UpdateDefaultValue(MaxHealth);
             entity.Health.Current = entity.Health.Max.GetValue();
+            entity.Speed.UpdateDefaultValue(Speed);
             entity.EquipWeapon(new Weapon(DefaultWeaponData));
         }
     }

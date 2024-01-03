@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
-using Business.Entities;
-using Components;
+using Business.HealthPoints;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using TMPro;
 using UnityEngine;
 
-namespace Business.HealthPoints
+namespace Components.Entity.Character
 {
     public class RespawnerComponent : SerializedMonoBehaviour
     {

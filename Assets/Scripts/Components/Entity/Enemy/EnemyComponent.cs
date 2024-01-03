@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
+using Business.Entities;
 using UnityEngine;
 
-namespace Business.Entities
+namespace Components.Entity.Enemy
 {
     public class EnemyComponent: EntityComponent
     {
-        public EnemyComponent() : base(new Entity())
+        public EnemyComponent() : base(new Business.Entities.Entity())
         {
             Entity.Health.Died += HealthOnDied;
         }

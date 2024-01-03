@@ -1,13 +1,14 @@
 ﻿using System;
 using Business.Entities;
-using Components;
+using Components.Entity.Enemy;
 using Components.Interacting;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+
 #pragma warning disable CS4014
 
-namespace Business.Weapons
+namespace Components.Entity.Character
 {
     public class AttackOnClickComponent: SerializedMonoBehaviour
     {

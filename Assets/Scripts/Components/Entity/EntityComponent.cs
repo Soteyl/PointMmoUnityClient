@@ -2,11 +2,11 @@
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
-namespace Business.Entities
+namespace Components.Entity
 {
     public abstract class EntityComponent: SerializedMonoBehaviour
     {
-        public Entity Entity { get; }
+        public Business.Entities.Entity Entity { get; }
 
         [ShowInInspector]
         public float CurrentHealth => Entity.Health.Current;
@@ -14,7 +14,7 @@ namespace Business.Entities
         [OdinSerialize]
         private EntityCharacteristic Characteristic { get; set; }
 
-        protected EntityComponent(Entity entity)
+        protected EntityComponent(Business.Entities.Entity entity)
         {
             Entity = entity;
         }

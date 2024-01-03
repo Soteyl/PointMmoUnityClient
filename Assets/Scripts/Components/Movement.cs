@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
-using Business.Entities;
+using Business.Multipliers;
+using Components.Entity;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace Components
 {
@@ -27,6 +27,12 @@ namespace Components
             
             entity.Entity.Health.Died += OnCharacterDied;
             entity.Entity.Health.Resurrected += OnCharacterResurrected;
+            entity.Entity.Speed.ValueChanged += OnSpeedChanged;
+        }
+
+        private void OnSpeedChanged(object sender, ValueChangedEventArgs e)
+        {
+            navMeshAgent.speed = entity.Entity.Speed.GetValue();
         }
 
         public void MoveTo(Vector3 position)
