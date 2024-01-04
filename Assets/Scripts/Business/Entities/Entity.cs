@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Business.HealthPoints;
@@ -19,6 +20,7 @@ namespace Business.Entities
         public Entity()
         {
             _health = new Health(new MultipliedValue(100, min: 1));
+            _health.Effects.AddEffect(new IdleHealEffect(3, TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(7)));
             _speed = new MultipliedValue(3.5f, min: 0f);
 
             _health.Died += (_, _) => _speed.AddMultiplier(_deadSpeedMultiplier);

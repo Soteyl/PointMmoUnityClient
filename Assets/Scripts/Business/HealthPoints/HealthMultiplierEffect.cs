@@ -1,6 +1,5 @@
 ﻿using System;
 using Business.Effects;
-using Business.Entities;
 using Business.Multipliers;
 
 namespace Business.HealthPoints
@@ -9,13 +8,10 @@ namespace Business.HealthPoints
     {
         private readonly DefaultValueMultiplier _multiplier;
 
-        public HealthMultiplierEffect(float multiplier, Entity creator = null)
+        public HealthMultiplierEffect(float multiplier)
         {
             _multiplier = new DefaultValueMultiplier(multiplier);
-            Creator = creator;
         }
-
-        public Entity Creator { get; }
 
         public void Apply(Health entity)
         {

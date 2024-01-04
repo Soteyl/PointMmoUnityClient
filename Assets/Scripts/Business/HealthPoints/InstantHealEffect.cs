@@ -1,20 +1,24 @@
 ﻿using System;
 using Business.Effects;
+using Business.Entities;
 
 namespace Business.HealthPoints
 {
-    public class InstantDamageEffect: IEffect<Health>
+    public class InstantHealEffect: IEffect<Health>
     {
-        private readonly int _damage;
+        private readonly float _heal;
 
-        public InstantDamageEffect(int damage)
+        public InstantHealEffect(float heal, Entity creator = null)
         {
-            _damage = damage;
+            _heal = heal;
+            Creator = creator;
         }
+
+        public Entity Creator { get; }
 
         public void Apply(Health entity)
         {
-            entity.Current -= _damage;
+            entity.Current += _heal;
             EffectEnded?.Invoke(this, EventArgs.Empty);
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using Business.Effects;
-using Business.Entities;
 using Business.Multipliers;
 
 namespace Business.HealthPoints
@@ -10,14 +9,13 @@ namespace Business.HealthPoints
         private float _currentPoints;
 
         private readonly IEffectsContainer<Health> _effects;
-        
-        private readonly Entity _entity;
 
         private bool _isAlive = true;
 
         public Health(IMultipliedValue maxHealth)
         {
             Max = maxHealth;
+            _currentPoints = Max.GetValue();
             
             Max.ValueChanged += (sender, f) => MaxHealthUpdated?.Invoke(this, new HealthUpdatedArgs(f.OldValue, f.NewValue, this));
             
@@ -29,9 +27,13 @@ namespace Business.HealthPoints
             get => Math.Clamp(_currentPoints, 0, Max.GetValue());
             set
             {
+                if (!_isAlive)
+                    return;
+                
                 float oldHealth = _currentPoints;
                 _currentPoints = Math.Clamp(value, 0, Max.GetValue());
-                CurrentHealthUpdated?.Invoke(this, new HealthUpdatedArgs(oldHealth, _currentPoints, this));
+                if (Math.Abs(oldHealth - _currentPoints) > 0.001f)
+                    CurrentHealthUpdated?.Invoke(this, new HealthUpdatedArgs(oldHealth, _currentPoints, this));
                 if (oldHealth > 0 && _currentPoints == 0)
                 {
                     _isAlive = false;

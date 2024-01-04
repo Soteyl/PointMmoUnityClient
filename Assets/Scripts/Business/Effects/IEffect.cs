@@ -1,7 +1,4 @@
 ﻿using System;
-using Business.Entities;
-using UnityEngine;
-
 namespace Business.Effects
 {
     public interface IEffect
@@ -14,8 +11,6 @@ namespace Business.Effects
     
     public interface IEffect<in T> : IEffect
     {
-        Entity Creator { get; }
-        
         void Apply(T entity);
 
         void Misapply(T entity);
