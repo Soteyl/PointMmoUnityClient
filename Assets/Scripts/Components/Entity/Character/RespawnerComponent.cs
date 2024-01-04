@@ -18,14 +18,11 @@ namespace Components.Entity.Character
         
         [OdinSerialize]
         public SpawnPointComponent SpawnPoint { get; set; }
-
-        private Rigidbody _characterRigidbody;
         
 
         private void Start()
         {
             Character.Entity.Health.Died += CharacterOnDied;
-            _characterRigidbody = Character.GetComponent<Rigidbody>();
         }
 
         private void CharacterOnDied(object sender, EventArgs e)
@@ -44,7 +41,6 @@ namespace Components.Entity.Character
             Text.text = "";
             Character.Entity.Health.Resurrect();
             Character.transform.position = SpawnPoint.Point;
-            _characterRigidbody.velocity = new Vector3();
         }
 
         private void OnEnable()
