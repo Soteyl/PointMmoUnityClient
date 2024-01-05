@@ -57,8 +57,6 @@ namespace Business.Weapons
             
             _stopwatch.Restart();
             IsPendingToAttack = false;
-            
-            Debug.Log($"Attacked with {damage} hp! Current target hp: {target.Health.Current}/{target.Health.Max}");
         }
 
         public event EventHandler<WeaponAttackedEventArgs> Attacked;

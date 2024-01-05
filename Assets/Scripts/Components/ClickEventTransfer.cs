@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Extensions;
 using Components.Interacting;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using RaycastHit = UnityEngine.RaycastHit;
 
 namespace Components
 {
@@ -20,7 +20,20 @@ namespace Components
 
         private InputAction _mouseClickAction;
 
-        public event EventHandler<InteractableObjectInvokedEventArgs> InteractableObjectInvoked;
+        private Camera _mainCamera;
+
+        private bool _isHold;
+        
+        private bool _isMainCameraNull;
+        
+        private Dictionary<GameObject, InteractableObject> _interactableObjectsCache = new();
+
+        public event EventHandler<InteractableObjectEventArgs> InteractableObjectInvoked;
+        
+        public event EventHandler<InteractableObjectEventArgs> InteractableObjectReleased;
+        
+        public event EventHandler<InteractableObjectEventArgs> InteractableObjectHold;
+        
 
         public static ClickEventTransfer FindInScene()
         {
@@ -29,28 +42,66 @@ namespace Components
 
         private void Awake()
         {
+            _mainCamera = Camera.main;
+            _isMainCameraNull = _mainCamera == null;
             _mouseClickAction = _inputActionAsset.FindAction("MouseClick");
-            _mouseClickAction.performed += OnMouseClick;
+            _mouseClickAction.started += OnMouseClick;
+            _mouseClickAction.canceled += OnMouseRelease;
+        }
+
+        private void Update()
+        {
+            if (_isHold && TryGetInteractableEventArgs(out var eventArgs))
+                InteractableObjectHold?.Invoke(this, eventArgs);
+        }
+
+        private void OnMouseRelease(InputAction.CallbackContext obj)
+        {
+            _isHold = false;
+            if (!TryGetInteractableEventArgs(out var eventArgs)) return;
+            InteractableObjectReleased?.Invoke(this, eventArgs);
         }
 
         private void OnMouseClick(InputAction.CallbackContext obj)
         {
-            if (Camera.main == null) return;
+            if (!TryGetInteractableEventArgs(out var eventArgs)) return;
+            _isHold = true;
+            InteractableObjectInvoked?.Invoke(this, eventArgs);
+        }
 
+        // ReSharper disable Unity.PerformanceAnalysis because it is optimized
+        private bool TryGetInteractableEventArgs(out InteractableObjectEventArgs eventArgs)
+        {
+            eventArgs = null;
+            if (_isMainCameraNull) return false;
+            var hits = new RaycastHit[50];
             var mouseClickPosition = Mouse.current.position.ReadValue();
-            Ray ray = Camera.main.ScreenPointToRay(mouseClickPosition);
+            var ray = _mainCamera.ScreenPointToRay(mouseClickPosition);
+            var hitCount = Physics.RaycastNonAlloc(ray, hits, Mathf.Infinity, _interactableLayer);
+            
+            var raycastHit = hits.Take(hitCount).Select(x =>
+                 {
+                     if (!_interactableObjectsCache.ContainsKey(x.transform.gameObject))
+                         _interactableObjectsCache.Add(x.transform.gameObject, x.transform.GetComponent<InteractableObject>());
+                                 
+                     return new
+                     {
+                         Point = x.point,
+                         Interactable = _interactableObjectsCache[x.transform.gameObject]
+                     };
+                 })
+                .OrderBy(x => x.Interactable.Type).FirstOrDefault();
 
-            var raycast = Physics.RaycastAll(ray, Mathf.Infinity, _interactableLayer)
-                .Select(x => new { Point = x.point, Interactable = x.transform.GetComponent<InteractableObject>() }).OrderBy(x => x.Interactable.Type).FirstOrDefault();
-            if (raycast is not null)
+            if (raycastHit is null) return false;
+
+            eventArgs = new InteractableObjectEventArgs
             {
-                InteractableObjectInvoked?.Invoke(this, new InteractableObjectInvokedEventArgs
-                {
-                    Object = raycast.Interactable,
-                    MouseClickPosition = mouseClickPosition,
-                    HitPosition = raycast.Point
-                });
-            }
+                Object = raycastHit.Interactable,
+                MouseClickPosition = mouseClickPosition,
+                HitPosition = raycastHit.Point
+            };
+
+            return true;
         }
 
         private void OnEnable()
@@ -64,7 +115,7 @@ namespace Components
         }
     }
 
-    public class InteractableObjectInvokedEventArgs : EventArgs
+    public class InteractableObjectEventArgs : EventArgs
     {
         public InteractableObject Object { get; set; }
         

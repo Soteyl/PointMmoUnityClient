@@ -14,10 +14,10 @@ namespace Components.Entity.Character
         private void Awake()
         {
             _clickEventTransfer = ClickEventTransfer.FindInScene();
-            _clickEventTransfer.InteractableObjectInvoked += OnMouseClick;
+            _clickEventTransfer.InteractableObjectHold += OnMouseClick;
         }
 
-        private void OnMouseClick(object sender, InteractableObjectInvokedEventArgs e)
+        private void OnMouseClick(object sender, InteractableObjectEventArgs e)
         {
             if (e.Object.Type == InteractableObjectType.Floor)
                 _movementComponent.MoveTo(e.HitPosition);

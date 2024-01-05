@@ -26,7 +26,7 @@ namespace Components.Entity.Character
             _clickEventTransfer.InteractableObjectInvoked += MouseClicked;
         }
 
-        private void MouseClicked(object sender, InteractableObjectInvokedEventArgs e)
+        private void MouseClicked(object sender, InteractableObjectEventArgs e)
         {
             if (e.Object.Type == InteractableObjectType.Enemy && e.Object.TryGetComponent<EnemyComponent>(out var entity))
                 _movementComponent.MoveToAndThen(GetPointNearTarget(entity), (st) =>
