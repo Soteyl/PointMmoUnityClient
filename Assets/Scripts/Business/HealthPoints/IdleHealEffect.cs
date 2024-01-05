@@ -61,7 +61,7 @@ namespace Business.HealthPoints
         {
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
-            HealWhileIdleAsync(_cancellationTokenSource.Token);
+            _ = HealWhileIdleAsync(_cancellationTokenSource.Token);
         }
 
         private void StopHealingTask()

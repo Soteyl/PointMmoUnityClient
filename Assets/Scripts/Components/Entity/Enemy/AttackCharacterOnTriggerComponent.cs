@@ -47,7 +47,7 @@ namespace Components.Entity.Enemy
                 {
                     _enemyMovement.MoveTo(GetPointNearTarget(character));
                 }
-                else _enemyComponent.Entity.AttackAsync(character.Entity);
+                else _ = _enemyComponent.Entity.AttackAsync(character.Entity);
             }
         }
         

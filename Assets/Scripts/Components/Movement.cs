@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using Business.Multipliers;
 using Components.Entity;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +11,7 @@ namespace Components
 {
     public class Movement: MonoBehaviour
     {
-        private Coroutine _moveCoroutine;
+        private CancellationTokenSource _cancellationTokenSource;
         
         [SerializeField]
         private EntityComponent entity;
@@ -46,30 +48,34 @@ namespace Components
             _actionOnFinishMove = action;
             navMeshAgent.isStopped = false;
             navMeshAgent.SetDestination(position);
-            _moveCoroutine = StartCoroutine(WaitUntilFinishMove());
+            _cancellationTokenSource = new CancellationTokenSource();
+            _ = WaitUntilFinishMoveAsync(_cancellationTokenSource.Token);
         }
 
-        private IEnumerator WaitUntilFinishMove()
+        private async Task WaitUntilFinishMoveAsync(CancellationToken cancellationToken = default)
         {
-            do yield return new WaitForFixedUpdate();
-            while (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance * 1.1f);
+            do await UniTask.DelayFrame(1, cancellationToken: cancellationToken);
+            while (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance * 1.02f);
+
+            if (cancellationToken.IsCancellationRequested)
+                return;
 
             navMeshAgent.ResetPath();
-            
+
             _actionOnFinishMove?.Invoke(MovementStatus.Finished);
             _actionOnFinishMove = null;
         }
 
         private void StopActiveMovement()
         {
-            if (_moveCoroutine is null) return;
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = null;
             
             _actionOnFinishMove?.Invoke(MovementStatus.Canceled);
             _actionOnFinishMove = null;
-            StopCoroutine(_moveCoroutine);
+            
             navMeshAgent.ResetPath();
             navMeshAgent.isStopped = true;
-            _moveCoroutine = null;
         }
         
         private void OnCharacterDied(object sender, EventArgs e)
