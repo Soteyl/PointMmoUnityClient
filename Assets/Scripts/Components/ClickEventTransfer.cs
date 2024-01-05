@@ -79,17 +79,8 @@ namespace Components
             var ray = _mainCamera.ScreenPointToRay(mouseClickPosition);
             var hitCount = Physics.RaycastNonAlloc(ray, hits, Mathf.Infinity, _interactableLayer);
             
-            var raycastHit = hits.Take(hitCount).Select(x =>
-                 {
-                     if (!_interactableObjectsCache.ContainsKey(x.transform.gameObject))
-                         _interactableObjectsCache.Add(x.transform.gameObject, x.transform.GetComponent<InteractableObject>());
-                                 
-                     return new
-                     {
-                         Point = x.point,
-                         Interactable = _interactableObjectsCache[x.transform.gameObject]
-                     };
-                 })
+            var raycastHit = hits.Take(hitCount)
+                .Select(x => new { Point = x.point, Interactable = GetCachedInteractable(x.transform.gameObject) })
                 .OrderBy(x => x.Interactable.Type).FirstOrDefault();
 
             if (raycastHit is null) return false;
@@ -112,6 +103,17 @@ namespace Components
         private void OnDisable()
         {
             _mouseClickAction.Disable();
+        }
+
+        private InteractableObject GetCachedInteractable(GameObject obj)
+        {
+            if (_interactableObjectsCache.Count > 255)
+                _interactableObjectsCache.Clear();
+            
+            if (!_interactableObjectsCache.ContainsKey(obj))
+                _interactableObjectsCache.Add(obj, obj.GetComponent<InteractableObject>());
+            
+            return _interactableObjectsCache[obj];
         }
     }
 
