@@ -1,5 +1,5 @@
 ﻿using System;
-using Business.Entities;
+using Common;
 using Components.Entity.Enemy;
 using Components.Interacting;
 using Sirenix.OdinInspector;
@@ -12,6 +12,8 @@ namespace Components.Entity.Character
 {
     public class AttackOnClickComponent: SerializedMonoBehaviour
     {
+        private readonly CachedComponentResolver<EnemyComponent> _cachedEnemy = new();
+
         [OdinSerialize]
         private CharacterComponent Character { get; set; }
         
@@ -28,7 +30,7 @@ namespace Components.Entity.Character
 
         private void MouseClicked(object sender, InteractableObjectEventArgs e)
         {
-            if (e.Object.Type == InteractableObjectType.Enemy && e.Object.TryGetComponent<EnemyComponent>(out var entity))
+            if (e.Object.Type == InteractableObjectType.Enemy && _cachedEnemy.TryResolve(e.Object, out var entity))
                 _movementComponent.MoveToAndThen(GetPointNearTarget(entity), (st) =>
                 {
                     if (st == MovementStatus.Finished) Character.Entity.AttackAsync(entity.Entity);

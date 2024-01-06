@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Components.Interacting;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -12,6 +13,8 @@ namespace Components
 {
     public class ClickEventTransfer: SerializedMonoBehaviour
     {
+        private readonly CachedComponentResolver<InteractableObject> _cachedInteractable = new();
+
         [OdinSerialize]
         private InputActionAsset _inputActionAsset;
 
@@ -25,8 +28,6 @@ namespace Components
         private bool _isHold;
         
         private bool _isMainCameraNull;
-        
-        private Dictionary<GameObject, InteractableObject> _interactableObjectsCache = new();
 
         public event EventHandler<InteractableObjectEventArgs> InteractableObjectInvoked;
         
@@ -80,7 +81,7 @@ namespace Components
             var hitCount = Physics.RaycastNonAlloc(ray, hits, Mathf.Infinity, _interactableLayer);
             
             var raycastHit = hits.Take(hitCount)
-                .Select(x => new { Point = x.point, Interactable = GetCachedInteractable(x.transform.gameObject) })
+                .Select(x => new { Point = x.point, Interactable = _cachedInteractable.Resolve(x.transform) })
                 .OrderBy(x => x.Interactable.Type).FirstOrDefault();
 
             if (raycastHit is null) return false;
@@ -103,17 +104,6 @@ namespace Components
         private void OnDisable()
         {
             _mouseClickAction.Disable();
-        }
-
-        private InteractableObject GetCachedInteractable(GameObject obj)
-        {
-            if (_interactableObjectsCache.Count > 255)
-                _interactableObjectsCache.Clear();
-            
-            if (!_interactableObjectsCache.ContainsKey(obj))
-                _interactableObjectsCache.Add(obj, obj.GetComponent<InteractableObject>());
-            
-            return _interactableObjectsCache[obj];
         }
     }
 

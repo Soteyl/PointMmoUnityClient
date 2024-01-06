@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Business.Entities;
 using Components.Entity.Character;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;

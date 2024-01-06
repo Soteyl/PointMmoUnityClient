@@ -1,4 +1,5 @@
 using System;
+using Common;
 using Components.Entity.Character;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -7,13 +8,15 @@ namespace Components.Entity.Enemy
 {
     public class TriggerCharacterEnemyComponent: SerializedMonoBehaviour
     {
+        private readonly CachedComponentResolver<CharacterComponent> _cachedCharacter = new();
+
         public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterTriggered; 
         
         public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterLeavedTrigger; 
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.TryGetComponent<CharacterComponent>(out var character))
+            if (_cachedCharacter.TryResolve(other, out var character))
             {
                 CharacterTriggered?.Invoke(this, new TriggeredCharacterEnemyEventArgs
                 {
@@ -24,7 +27,7 @@ namespace Components.Entity.Enemy
         
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.TryGetComponent<CharacterComponent>(out var character))
+            if (_cachedCharacter.TryResolve(other, out var character))
             {
                 CharacterLeavedTrigger?.Invoke(this, new TriggeredCharacterEnemyEventArgs
                 {
