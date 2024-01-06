@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections;
 using Business.Multipliers;
 using Components.Entity;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,7 +9,7 @@ namespace Components
 {
     public class Movement: MonoBehaviour
     {
-        private CancellationTokenSource _cancellationTokenSource;
+        private Coroutine _moveCoroutine;
         
         [SerializeField]
         private EntityComponent entity;
@@ -44,38 +42,25 @@ namespace Components
 
         public void MoveToAndThen(Vector3 position, Action<MovementStatus> action)
         {
-            StopActiveMovement();
+            _actionOnFinishMove?.Invoke(MovementStatus.Canceled);
+            
             _actionOnFinishMove = action;
-            navMeshAgent.isStopped = false;
+            
             navMeshAgent.SetDestination(position);
-            _cancellationTokenSource = new CancellationTokenSource();
-            _ = WaitUntilFinishMoveAsync(_cancellationTokenSource.Token);
+            
+            _moveCoroutine ??= StartCoroutine(WaitUntilFinishMove());
         }
 
-        private async Task WaitUntilFinishMoveAsync(CancellationToken cancellationToken = default)
+        private IEnumerator WaitUntilFinishMove()
         {
-            do await UniTask.DelayFrame(1, cancellationToken: cancellationToken);
+            do yield return new WaitForFixedUpdate();
             while (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance * 1.02f);
-
-            if (cancellationToken.IsCancellationRequested)
-                return;
-
+                
             navMeshAgent.ResetPath();
 
             _actionOnFinishMove?.Invoke(MovementStatus.Finished);
             _actionOnFinishMove = null;
-        }
-
-        private void StopActiveMovement()
-        {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource = null;
-            
-            _actionOnFinishMove?.Invoke(MovementStatus.Canceled);
-            _actionOnFinishMove = null;
-            
-            navMeshAgent.ResetPath();
-            navMeshAgent.isStopped = true;
+            _moveCoroutine = null;
         }
         
         private void OnCharacterDied(object sender, EventArgs e)
@@ -88,7 +73,6 @@ namespace Components
             navMeshAgent.ResetPath();
             navMeshAgent.isStopped = false;
         }
-        
     }
 
     public enum MovementStatus
