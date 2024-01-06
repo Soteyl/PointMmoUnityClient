@@ -28,7 +28,8 @@ namespace Components.Entity.Enemy
 
         private void OnCharacterLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)
         {
-            StopCoroutine(_attackCoroutine);
+            if (_attackCoroutine is not null)
+                StopCoroutine(_attackCoroutine);
         }
 
         private void OnCharacterTriggered(object sender, TriggeredCharacterEnemyEventArgs e)
