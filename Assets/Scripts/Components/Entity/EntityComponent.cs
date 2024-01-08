@@ -8,11 +8,11 @@ namespace Components.Entity
     {
         public Business.Entities.Entity Entity { get; }
 
-        [ShowInInspector]
-        public float CurrentHealth => Entity.Health.Current;
-
         [OdinSerialize]
         private EntityCharacteristic Characteristic { get; set; }
+        
+        [OdinSerialize]
+        public Movement Movement { get; private set; }
 
         protected EntityComponent(Business.Entities.Entity entity)
         {

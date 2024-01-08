@@ -44,7 +44,7 @@ namespace Common
                 _lruList.Remove(node);
                 _lruList.AddFirst(node);
                 component = node.Value.Value;
-                return true;
+                return component != null;
             }
 
             var isSuccess = gameObject.TryGetComponent(out component);

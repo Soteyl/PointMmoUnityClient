@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Components.Entity.Enemy
 {
-    public class TriggerCharacterEnemyComponent: SerializedMonoBehaviour
+    public class CharacterTrigger: SerializedMonoBehaviour
     {
-        private readonly CachedComponentResolver<CharacterComponent> _cachedCharacter = new();
+        private readonly CachedComponentResolver<CharacterComponent> _cachedCharacter = new(5);
 
         public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterTriggered; 
         

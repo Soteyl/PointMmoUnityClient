@@ -10,7 +10,7 @@ namespace Components.Entity.Enemy
     public class AttackCharacterOnTriggerComponent: SerializedMonoBehaviour
     {
         [OdinSerialize]
-        private TriggerCharacterEnemyComponent _triggerCharacterEnemyComponent;
+        private CharacterTrigger _characterTrigger;
 
         [OdinSerialize]
         private Movement _enemyMovement;
@@ -22,11 +22,11 @@ namespace Components.Entity.Enemy
 
         private void Awake()
         {
-            _triggerCharacterEnemyComponent.CharacterTriggered += OnCharacterTriggered;
-            _triggerCharacterEnemyComponent.CharacterLeavedTrigger += OnCharacterLeavedTrigger;
+            _characterTrigger.CharacterTriggered += OnCharacterTriggered;
+            _characterTrigger.CharacterLeavedTrigger += OnCharacterLeavedCharacterTrigger;
         }
 
-        private void OnCharacterLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)
+        private void OnCharacterLeavedCharacterTrigger(object sender, TriggeredCharacterEnemyEventArgs e)
         {
             if (_attackCoroutine is not null)
                 StopCoroutine(_attackCoroutine);
@@ -42,7 +42,8 @@ namespace Components.Entity.Enemy
             while (true)
             {
                 yield return new WaitForFixedUpdate();
-                if (!character.Entity.Health.IsAlive || !_enemyComponent.Entity.Health.IsAlive) yield break;
+                if (!character.Entity.Health.IsAlive || !_enemyComponent.Entity.Health.IsAlive) 
+                    yield break;
                 if (Vector3.Distance(_enemyComponent.transform.position, character.transform.position) > _enemyComponent.Entity.Weapon.WeaponData.Distance)
                 {
                     _enemyMovement.MoveTo(GetPointNearTarget(character));

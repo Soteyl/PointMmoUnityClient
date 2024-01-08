@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
-using Business.Entities;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Components.Entity.Enemy
 {
     public class EnemyComponent: EntityComponent
     {
+        [OdinSerialize]
+        public CharacterTrigger CharacterTrigger { get; private set; }
+        
         public EnemyComponent() : base(new Business.Entities.Entity())
         {
             Entity.Health.Died += HealthOnDied;
