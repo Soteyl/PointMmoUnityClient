@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace Components.Entity.Enemy
 {
-    public class CharacterTrigger: SerializedMonoBehaviour
+    [RequireComponent(typeof(Collider))]
+    public class CharacterTrigger: SerializedMonoBehaviour, ICharacterTrigger
     {
         private readonly CachedComponentResolver<CharacterComponent> _cachedCharacter = new(5);
 
@@ -36,7 +37,7 @@ namespace Components.Entity.Enemy
             }
         }
     }
-    
+
     public class TriggeredCharacterEnemyEventArgs: EventArgs
     {
         public CharacterComponent Character { get; set; }

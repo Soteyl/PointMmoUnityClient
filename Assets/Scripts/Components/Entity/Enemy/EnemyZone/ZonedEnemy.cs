@@ -1,4 +1,3 @@
-using System;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -8,17 +7,20 @@ namespace Components.Entity.Enemy.EnemyZone
     public class ZonedEnemy: SerializedMonoBehaviour
     {
         [OdinSerialize]
-        public EnemyZoneSpawner EnemyZoneSpawner { get; set; }
+        public EnemyZone EnemyZone { get; set; }
         
         [OdinSerialize]
         public EnemyComponent Enemy { get; set; }
+        
+        [OdinSerialize]
+        public ICharacterTrigger CharacterTrigger { get; set; }
 
         private Vector3 _initialPosition;
 
         private void Start()
         {
             _initialPosition = transform.position;
-            Enemy.CharacterTrigger.CharacterLeavedTrigger += CharacterTriggerOnCharacterLeavedTrigger;
+            CharacterTrigger.CharacterLeavedTrigger += CharacterTriggerOnCharacterLeavedTrigger;
         }
 
         private void CharacterTriggerOnCharacterLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)

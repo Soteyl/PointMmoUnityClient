@@ -8,7 +8,13 @@ namespace Components.Entity.Enemy
     public class EnemyComponent: EntityComponent
     {
         [OdinSerialize]
-        public CharacterTrigger CharacterTrigger { get; private set; }
+        public ICharacterTrigger CharacterTrigger { get; private set; }
+        
+        [OdinSerialize]
+        public EnemyCharacterAttacker CharacterAttacker { get; private set; }
+        
+        [OdinSerialize]
+        public AttackCharacterOnTriggerComponent CharacterAttackOnTrigger { get; private set; }
         
         public EnemyComponent() : base(new Business.Entities.Entity())
         {
