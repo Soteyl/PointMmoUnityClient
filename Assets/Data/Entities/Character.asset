@@ -24,7 +24,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Speed
       Entry: 4
-      Data: 5
+      Data: 8
     - Name: MaxHealth
       Entry: 3
       Data: 100

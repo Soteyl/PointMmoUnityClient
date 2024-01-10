@@ -1123,7 +1123,7 @@ MonoBehaviour:
       Data: 5
     - Name: _attackTogether
       Entry: 5
-      Data: false
+      Data: true
 --- !u!4 &1503461615
 Transform:
   m_ObjectHideFlags: 0

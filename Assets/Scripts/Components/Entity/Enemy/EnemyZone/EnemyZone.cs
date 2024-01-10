@@ -24,9 +24,7 @@ namespace Components.Entity.Enemy.EnemyZone
         private int _triggeredEnemiesCount;
         
         private CustomCharacterTrigger _characterTrigger = new();
-
-        private ICharacterTrigger _trueTriggerStrategy;
-
+        
         private bool IsTriggeredFirst => _triggeredEnemiesCount == 1;
 
         private void Awake()
@@ -57,13 +55,10 @@ namespace Components.Entity.Enemy.EnemyZone
             zonedEnemy.EnemyMovement = enemyHub.Movement;
             zonedEnemy.CharacterTriggerRunner = enemyHub.CharacterTriggerRunner;
 
-            if (_attackTogether)
-            {
-                _trueTriggerStrategy = enemyHub.CharacterTriggerRunner.Strategy;
-                _trueTriggerStrategy.CharacterTriggered += EnemyTriggered;
-                _trueTriggerStrategy.CharacterLeavedTrigger += EnemyLeavedTrigger;
-                enemyHub.CharacterTriggerRunner.Strategy = _characterTrigger;
-            }
+            if (!_attackTogether) return zonedEnemy;
+            enemyHub.CharacterTriggerRunner.Strategy.CharacterTriggered += EnemyTriggered;
+            enemyHub.CharacterTriggerRunner.Strategy.CharacterLeavedTrigger += EnemyLeavedTrigger;
+            enemyHub.CharacterTriggerRunner.Strategy = _characterTrigger;
 
             return zonedEnemy;
         }
