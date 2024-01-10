@@ -9,7 +9,7 @@ namespace Common
         
         private readonly Dictionary<GameObject, LinkedListNode<KeyValuePair<GameObject, T>>> _cache;
         
-        private readonly LinkedList<KeyValuePair<GameObject, T>> _lruList;
+        private readonly LinkedList<KeyValuePair<GameObject, T>> _lruList;  
 
         public CachedComponentResolver(int maxCachedObjects = 255)
         {
@@ -30,7 +30,7 @@ namespace Common
                 return node.Value.Value;
             }
 
-            var component = gameObject.GetComponent<T>();
+            var component = gameObject.GetComponent<T>() ?? gameObject.GetComponentInChildren<T>();
             AddToCache(gameObject, component);
             return component;
         }
@@ -48,6 +48,13 @@ namespace Common
             }
 
             var isSuccess = gameObject.TryGetComponent(out component);
+
+            if (!isSuccess)
+            {
+                component = gameObject.GetComponentInChildren<T>();
+                isSuccess = component is not null;
+            }
+            
             AddToCache(gameObject, component);
             return isSuccess;
         }

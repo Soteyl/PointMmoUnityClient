@@ -678,7 +678,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 4dd3a9af202316d46b07b1c18985e08f, type: 2}
-    - {fileID: 1824600377}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -687,9 +686,6 @@ MonoBehaviour:
     - Name: Characteristic
       Entry: 10
       Data: 0
-    - Name: Movement
-      Entry: 10
-      Data: 1
 --- !u!114 &893115047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1127,7 +1123,7 @@ MonoBehaviour:
       Data: 5
     - Name: _attackTogether
       Entry: 5
-      Data: true
+      Data: false
 --- !u!4 &1503461615
 Transform:
   m_ObjectHideFlags: 0

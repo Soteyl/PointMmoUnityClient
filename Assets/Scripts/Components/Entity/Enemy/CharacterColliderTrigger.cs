@@ -7,21 +7,21 @@ using UnityEngine;
 namespace Components.Entity.Enemy
 {
     [RequireComponent(typeof(Collider))]
-    public class CharacterTrigger: SerializedMonoBehaviour, ICharacterTrigger
+    public class CharacterColliderTrigger: SerializedMonoBehaviour, ICharacterTrigger
     {
         private readonly CachedComponentResolver<CharacterComponent> _cachedCharacter = new(5);
-
-        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterTriggered; 
         
-        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterLeavedTrigger; 
+        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterTriggered; 
 
+        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterLeavedTrigger;
+        
         private void OnTriggerEnter(Collider other)
         {
             if (_cachedCharacter.TryResolve(other, out var character))
             {
                 CharacterTriggered?.Invoke(this, new TriggeredCharacterEnemyEventArgs
                 {
-                    Character = character
+                        Character = character
                 });
             }
         }
@@ -32,14 +32,9 @@ namespace Components.Entity.Enemy
             {
                 CharacterLeavedTrigger?.Invoke(this, new TriggeredCharacterEnemyEventArgs
                 {
-                    Character = character
+                        Character = character
                 });
             }
         }
-    }
-
-    public class TriggeredCharacterEnemyEventArgs: EventArgs
-    {
-        public CharacterComponent Character { get; set; }
     }
 }

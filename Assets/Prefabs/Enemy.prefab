@@ -56,7 +56,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: CharacterTrigger
+    - Name: CharacterTriggerRunner
       Entry: 10
       Data: 0
     - Name: _characterAttacker
@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 8997590545928222891}
   - component: {fileID: 4926111025166725709}
   - component: {fileID: 2421303179216561489}
+  - component: {fileID: 4055872805339038055}
   m_Layer: 2
   m_Name: CharacterTrigger
   m_TagString: Untagged
@@ -230,6 +231,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 49d9e6b9d1484ce4ba681940be81c8b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 4055872805339038055}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: Strategy
+      Entry: 10
+      Data: 0
+--- !u!114 &4055872805339038055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506341692382147851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea6232854c6549e19d5f9c02b10d06c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -514,6 +540,7 @@ GameObject:
   - component: {fileID: 4175814238530722871}
   - component: {fileID: 2678358218656181817}
   - component: {fileID: 6821226422995089228}
+  - component: {fileID: 4197324369630592480}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Untagged
@@ -701,10 +728,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 721d99f71b944415bb792195e7b17976, type: 2}
-    - {fileID: 3361840078200493910}
-    - {fileID: 2421303179216561489}
-    - {fileID: 820052789442099503}
-    - {fileID: 313297737829233306}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -713,15 +736,40 @@ MonoBehaviour:
     - Name: Characteristic
       Entry: 10
       Data: 0
+--- !u!114 &4197324369630592480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8832400115434931624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948bc40f7d2e4facacb3bda42666741a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 6821226422995089228}
+    - {fileID: 3361840078200493910}
+    - {fileID: 2421303179216561489}
+    - {fileID: 820052789442099503}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: Enemy
+      Entry: 10
+      Data: 0
     - Name: Movement
       Entry: 10
       Data: 1
-    - Name: CharacterTrigger
+    - Name: CharacterTriggerRunner
       Entry: 10
       Data: 2
     - Name: CharacterAttacker
       Entry: 10
       Data: 3
-    - Name: CharacterAttackOnTrigger
-      Entry: 10
-      Data: 4

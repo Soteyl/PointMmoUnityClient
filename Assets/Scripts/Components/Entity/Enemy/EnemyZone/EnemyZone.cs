@@ -23,7 +23,9 @@ namespace Components.Entity.Enemy.EnemyZone
         
         private int _triggeredEnemiesCount;
         
-        private CustomCharacterTrigger _characterTrigger = new ();
+        private CustomCharacterTrigger _characterTrigger = new();
+
+        private ICharacterTrigger _trueTriggerStrategy;
 
         private bool IsTriggeredFirst => _triggeredEnemiesCount == 1;
 
@@ -49,19 +51,18 @@ namespace Components.Entity.Enemy.EnemyZone
         private ZonedEnemy AddZonedEnemyComponent(GameObject obj)
         {
             var zonedEnemy = obj.AddComponent<ZonedEnemy>();
+            var enemyHub = obj.GetComponent<EnemyHub>();
+            
             zonedEnemy.EnemyZone = this;
-            zonedEnemy.Enemy = obj.GetComponent<EnemyComponent>();
+            zonedEnemy.EnemyMovement = enemyHub.Movement;
+            zonedEnemy.CharacterTriggerRunner = enemyHub.CharacterTriggerRunner;
 
             if (_attackTogether)
             {
-                zonedEnemy.CharacterTrigger = _characterTrigger;
-                zonedEnemy.Enemy.CharacterTrigger.CharacterTriggered += EnemyTriggered;
-                zonedEnemy.Enemy.CharacterTrigger.CharacterLeavedTrigger += EnemyLeavedTrigger;
-                zonedEnemy.Enemy.CharacterAttackOnTrigger.CharacterTrigger = _characterTrigger;
-            }
-            else
-            {
-                zonedEnemy.CharacterTrigger = zonedEnemy.Enemy.CharacterTrigger;
+                _trueTriggerStrategy = enemyHub.CharacterTriggerRunner.Strategy;
+                _trueTriggerStrategy.CharacterTriggered += EnemyTriggered;
+                _trueTriggerStrategy.CharacterLeavedTrigger += EnemyLeavedTrigger;
+                enemyHub.CharacterTriggerRunner.Strategy = _characterTrigger;
             }
 
             return zonedEnemy;

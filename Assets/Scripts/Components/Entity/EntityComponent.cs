@@ -10,9 +10,6 @@ namespace Components.Entity
 
         [OdinSerialize]
         private EntityCharacteristic Characteristic { get; set; }
-        
-        [OdinSerialize]
-        public Movement Movement { get; private set; }
 
         protected EntityComponent(Business.Entities.Entity entity)
         {

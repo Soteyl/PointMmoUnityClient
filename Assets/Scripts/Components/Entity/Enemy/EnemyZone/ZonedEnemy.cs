@@ -8,24 +8,24 @@ namespace Components.Entity.Enemy.EnemyZone
     {
         [OdinSerialize]
         public EnemyZone EnemyZone { get; set; }
+
+        [OdinSerialize]
+        public CharacterTriggerRunner CharacterTriggerRunner { get; set; }
         
         [OdinSerialize]
-        public EnemyComponent Enemy { get; set; }
-        
-        [OdinSerialize]
-        public ICharacterTrigger CharacterTrigger { get; set; }
+        public Movement EnemyMovement { get; set; }
 
         private Vector3 _initialPosition;
 
         private void Start()
         {
             _initialPosition = transform.position;
-            CharacterTrigger.CharacterLeavedTrigger += CharacterTriggerOnCharacterLeavedTrigger;
+            CharacterTriggerRunner.CharacterLeavedTrigger += CharacterTriggerOnCharacterLeavedTrigger;
         }
 
         private void CharacterTriggerOnCharacterLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)
         {
-            Enemy.Movement.MoveTo(_initialPosition);
+            EnemyMovement.MoveTo(_initialPosition);
         }
     }
 }
