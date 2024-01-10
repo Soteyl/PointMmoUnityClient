@@ -26,5 +26,11 @@ namespace Components.Entity.Enemy
         {
             _characterAttacker.StartAttack(e.Character);
         }
+
+        private void OnDestroy()
+        {
+            CharacterTriggerRunner.CharacterTriggered -= OnCharacterTriggered;
+            CharacterTriggerRunner.CharacterLeavedTrigger -= OnCharacterLeavedCharacterTrigger;
+        }
     }
 }

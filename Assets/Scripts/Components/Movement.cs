@@ -25,14 +25,15 @@ namespace Components
         {
             navMeshAgent.speed = entity.Entity.Speed.GetValue();
             
-            entity.Entity.Health.Died += OnCharacterDied;
-            entity.Entity.Health.Resurrected += OnCharacterResurrected;
             entity.Entity.Speed.ValueChanged += OnSpeedChanged;
         }
 
         private void OnSpeedChanged(object sender, ValueChangedEventArgs e)
         {
             navMeshAgent.speed = entity.Entity.Speed.GetValue();
+            
+            if (e.OldValue == 0)
+                navMeshAgent.ResetPath();
         }
 
         public void MoveTo(Vector3 position)
@@ -54,24 +55,20 @@ namespace Components
         private IEnumerator WaitUntilFinishMove()
         {
             do yield return new WaitForFixedUpdate();
-            while (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance * 1.02f);
+            while (navMeshAgent.isActiveAndEnabled && navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance * 1.02f);
                 
-            navMeshAgent.ResetPath();
+            if (navMeshAgent.isActiveAndEnabled)
+                navMeshAgent.ResetPath();
 
             _actionOnFinishMove?.Invoke(MovementStatus.Finished);
             _actionOnFinishMove = null;
             _moveCoroutine = null;
         }
-        
-        private void OnCharacterDied(object sender, EventArgs e)
+
+        private void OnDestroy()
         {
-            navMeshAgent.isStopped = true;
-        }
-        
-        private void OnCharacterResurrected(object sender, EventArgs e)
-        {
-            navMeshAgent.ResetPath();
-            navMeshAgent.isStopped = false;
+            if (_moveCoroutine is not null)
+                StopCoroutine(_moveCoroutine);
         }
     }
 

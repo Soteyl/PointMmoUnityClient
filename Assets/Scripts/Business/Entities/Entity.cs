@@ -13,9 +13,9 @@ namespace Business.Entities
 
         protected readonly IMultipliedValue _speed;
 
-        protected IWeapon _weapon;
+        private readonly IValueMultiplier _deadSpeedMultiplier = new DefaultValueMultiplier(0);
 
-        private IValueMultiplier _deadSpeedMultiplier = new DefaultValueMultiplier(0);
+        protected IWeapon _weapon;
 
         public Entity()
         {

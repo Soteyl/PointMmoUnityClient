@@ -24,7 +24,7 @@ namespace Components.Entity.Enemy.EnemyZone
         
         private int _triggeredEnemiesCount;
         
-        private CustomCharacterTrigger _characterTrigger = new();
+        private readonly CustomCharacterTrigger _characterTrigger = new();
         
         private bool IsTriggeredFirst => _triggeredEnemiesCount == 1;
 
@@ -41,7 +41,7 @@ namespace Components.Entity.Enemy.EnemyZone
             
             foreach (var entity in allSpawnedEntities)
             {
-                var spawnedEntity = Instantiate(entity, CountSpawnPosition(angle), Quaternion.identity);
+                var spawnedEntity = Instantiate(entity, CountSpawnPosition(angle), Quaternion.identity, transform);
                 _spawnedEntities.Add(AddZonedEnemyComponent(spawnedEntity));
                 angle += angleStep;
             }

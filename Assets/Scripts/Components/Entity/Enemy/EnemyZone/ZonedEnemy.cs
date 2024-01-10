@@ -27,5 +27,10 @@ namespace Components.Entity.Enemy.EnemyZone
         {
             EnemyMovement.MoveTo(_initialPosition);
         }
+        
+        private void OnDestroy()
+        {
+            CharacterTriggerRunner.CharacterLeavedTrigger -= CharacterTriggerOnCharacterLeavedTrigger;
+        }
     }
 }

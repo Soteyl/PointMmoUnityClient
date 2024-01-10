@@ -261,12 +261,16 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 6821226422995089228}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: _enemy
+      Entry: 10
+      Data: 0
 --- !u!1 &5209279099334833992
 GameObject:
   m_ObjectHideFlags: 0
