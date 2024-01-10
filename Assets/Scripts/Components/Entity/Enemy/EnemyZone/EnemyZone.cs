@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common.Extensions;
 using Components.Entity.Character;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -27,7 +28,7 @@ namespace Components.Entity.Enemy.EnemyZone
         
         private bool IsTriggeredFirst => _triggeredEnemiesCount == 1;
 
-        private void Awake()
+        private void Start()
         {
             SpawnEntities();
         }
@@ -49,7 +50,7 @@ namespace Components.Entity.Enemy.EnemyZone
         private ZonedEnemy AddZonedEnemyComponent(GameObject obj)
         {
             var zonedEnemy = obj.AddComponent<ZonedEnemy>();
-            var enemyHub = obj.GetComponent<EnemyHub>();
+            obj.TryAccessHub<EnemyHub>(out var enemyHub);
             
             zonedEnemy.EnemyZone = this;
             zonedEnemy.EnemyMovement = enemyHub.Movement;

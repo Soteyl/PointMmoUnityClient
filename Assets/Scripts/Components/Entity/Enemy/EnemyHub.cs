@@ -1,9 +1,9 @@
-using Sirenix.OdinInspector;
+using Common.Hub;
 using Sirenix.Serialization;
 
 namespace Components.Entity.Enemy
 {
-    public class EnemyHub: SerializedMonoBehaviour
+    public class EnemyHub: ComponentHub<EnemyHub>
     {
         [OdinSerialize]
         public EnemyComponent Enemy { get; private set; }
