@@ -1,0 +1,525 @@
+Index: Assets/Scripts/Components/Entity/Enemy/AttackCharacterOnTriggerComponent.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using Sirenix.OdinInspector;\nusing Sirenix.Serialization;\n\nnamespace Components.Entity.Enemy\n{\n    public class AttackCharacterOnTriggerComponent: SerializedMonoBehaviour\n    {\n        private ICharacterTrigger _characterTrigger;\n\n        [OdinSerialize]\n        public ICharacterTrigger CharacterTrigger\n        {\n            get => _characterTrigger;\n            set\n            {\n                if (_characterTrigger == value || value == null) return;\n\n                if (_characterTrigger != null)\n                {\n                    _characterTrigger.CharacterTriggered -= OnCharacterTriggered;\n                    _characterTrigger.CharacterLeavedTrigger -= OnCharacterLeavedCharacterTrigger;\n                }\n\n                _characterTrigger = value;\n                _characterTrigger.CharacterTriggered += OnCharacterTriggered;\n                _characterTrigger.CharacterLeavedTrigger += OnCharacterLeavedCharacterTrigger;\n            }\n        }\n\n        [OdinSerialize]\n        private EnemyCharacterAttacker _characterAttacker;\n        \n\n        private void Awake()\n        {\n            CharacterTrigger.CharacterTriggered += OnCharacterTriggered;\n            CharacterTrigger.CharacterLeavedTrigger += OnCharacterLeavedCharacterTrigger;\n        }\n\n        private void OnCharacterLeavedCharacterTrigger(object sender, TriggeredCharacterEnemyEventArgs e)\n        {\n            _characterAttacker.StopAttack();\n        }\n\n        private void OnCharacterTriggered(object sender, TriggeredCharacterEnemyEventArgs e)\n        {\n            _characterAttacker.StartAttack(e.Character);\n        }\n        \n        \n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/AttackCharacterOnTriggerComponent.cs b/Assets/Scripts/Components/Entity/Enemy/AttackCharacterOnTriggerComponent.cs
+--- a/Assets/Scripts/Components/Entity/Enemy/AttackCharacterOnTriggerComponent.cs	(revision dbf0ee124a46ea839bd3d30c54c9f8cdb939a44c)
++++ b/Assets/Scripts/Components/Entity/Enemy/AttackCharacterOnTriggerComponent.cs	(date 1704901317177)
+@@ -5,31 +5,11 @@
+ {
+     public class AttackCharacterOnTriggerComponent: SerializedMonoBehaviour
+     {
+-        private ICharacterTrigger _characterTrigger;
+-
+         [OdinSerialize]
+-        public ICharacterTrigger CharacterTrigger
+-        {
+-            get => _characterTrigger;
+-            set
+-            {
+-                if (_characterTrigger == value || value == null) return;
+-
+-                if (_characterTrigger != null)
+-                {
+-                    _characterTrigger.CharacterTriggered -= OnCharacterTriggered;
+-                    _characterTrigger.CharacterLeavedTrigger -= OnCharacterLeavedCharacterTrigger;
+-                }
+-
+-                _characterTrigger = value;
+-                _characterTrigger.CharacterTriggered += OnCharacterTriggered;
+-                _characterTrigger.CharacterLeavedTrigger += OnCharacterLeavedCharacterTrigger;
+-            }
+-        }
++        public CharacterTrigger CharacterTrigger { get; set; }
+ 
+         [OdinSerialize]
+         private EnemyCharacterAttacker _characterAttacker;
+-        
+ 
+         private void Awake()
+         {
+@@ -46,7 +26,5 @@
+         {
+             _characterAttacker.StartAttack(e.Character);
+         }
+-        
+-        
+     }
+ }
+\ No newline at end of file
+Index: Assets/Prefabs/Enemy.prefab
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!1 &219456165753502937\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: 6486291881466765562}\n  - component: {fileID: 313297737829233306}\n  - component: {fileID: 820052789442099503}\n  m_Layer: 3\n  m_Name: Attacker\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1\n--- !u!4 &6486291881466765562\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 219456165753502937}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\n  m_LocalPosition: {x: 0, y: 0, z: 0}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 8346701487561006864}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n--- !u!114 &313297737829233306\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 219456165753502937}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: 62cf6eed59854a3482aa193d984109e8, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  serializationData:\n    SerializedFormat: 2\n    SerializedBytes: \n    ReferencedUnityObjects:\n    - {fileID: 2421303179216561489}\n    - {fileID: 820052789442099503}\n    SerializedBytesString: \n    Prefab: {fileID: 0}\n    PrefabModificationsReferencedUnityObjects: []\n    PrefabModifications: []\n    SerializationNodes:\n    - Name: CharacterTrigger\n      Entry: 10\n      Data: 0\n    - Name: _characterAttacker\n      Entry: 10\n      Data: 1\n--- !u!114 &820052789442099503\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 219456165753502937}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: 14fdf5756c87466f97f74779a5698748, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  serializationData:\n    SerializedFormat: 2\n    SerializedBytes: \n    ReferencedUnityObjects:\n    - {fileID: 3361840078200493910}\n    - {fileID: 6821226422995089228}\n    SerializedBytesString: \n    Prefab: {fileID: 0}\n    PrefabModificationsReferencedUnityObjects: []\n    PrefabModifications: []\n    SerializationNodes:\n    - Name: _enemyMovement\n      Entry: 10\n      Data: 0\n    - Name: _enemyComponent\n      Entry: 10\n      Data: 1\n--- !u!1 &1945257621105147851\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: 4227554899996539298}\n  - component: {fileID: 2258849387758343691}\n  - component: {fileID: 4498033930768308225}\n  m_Layer: 5\n  m_Name: HealthBar\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1\n--- !u!224 &4227554899996539298\nRectTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 1945257621105147851}\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\n  m_LocalPosition: {x: 0, y: 0, z: 0}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 9110435334506497852}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n  m_AnchorMin: {x: 0.5, y: 0.5}\n  m_AnchorMax: {x: 0.5, y: 0.5}\n  m_AnchoredPosition: {x: 0, y: 0}\n  m_SizeDelta: {x: 100, y: 30}\n  m_Pivot: {x: 0.5, y: 0.5}\n--- !u!222 &2258849387758343691\nCanvasRenderer:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 1945257621105147851}\n  m_CullTransparentMesh: 1\n--- !u!114 &4498033930768308225\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 1945257621105147851}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  m_Material: {fileID: 0}\n  m_Color: {r: 0.6509804, g: 0.91372555, b: 1, a: 1}\n  m_RaycastTarget: 1\n  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}\n  m_Maskable: 1\n  m_OnCullStateChanged:\n    m_PersistentCalls:\n      m_Calls: []\n  m_Sprite: {fileID: 21300000, guid: 1e0d5b1eca91e4013926fefef6ca5955, type: 3}\n  m_Type: 0\n  m_PreserveAspect: 0\n  m_FillCenter: 1\n  m_FillMethod: 4\n  m_FillAmount: 1\n  m_FillClockwise: 1\n  m_FillOrigin: 0\n  m_UseSpriteMesh: 0\n  m_PixelsPerUnitMultiplier: 1\n--- !u!1 &2506341692382147851\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: 8997590545928222891}\n  - component: {fileID: 4926111025166725709}\n  - component: {fileID: 2421303179216561489}\n  m_Layer: 2\n  m_Name: CharacterTrigger\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1\n--- !u!4 &8997590545928222891\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 2506341692382147851}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\n  m_LocalPosition: {x: 0, y: 0, z: 0}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 8346701487561006864}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n--- !u!135 &4926111025166725709\nSphereCollider:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 2506341692382147851}\n  m_Material: {fileID: 0}\n  m_IncludeLayers:\n    serializedVersion: 2\n    m_Bits: 512\n  m_ExcludeLayers:\n    serializedVersion: 2\n    m_Bits: 511\n  m_LayerOverridePriority: 0\n  m_IsTrigger: 1\n  m_ProvidesContacts: 0\n  m_Enabled: 1\n  serializedVersion: 3\n  m_Radius: 6\n  m_Center: {x: 0, y: 0, z: 0}\n--- !u!114 &2421303179216561489\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 2506341692382147851}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: 49d9e6b9d1484ce4ba681940be81c8b0, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  serializationData:\n    SerializedFormat: 2\n    SerializedBytes: \n    ReferencedUnityObjects: []\n    SerializedBytesString: \n    Prefab: {fileID: 0}\n    PrefabModificationsReferencedUnityObjects: []\n    PrefabModifications: []\n    SerializationNodes: []\n--- !u!1 &5209279099334833992\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: 1568861808794639655}\n  - component: {fileID: 3361840078200493910}\n  m_Layer: 3\n  m_Name: Movement\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1\n--- !u!4 &1568861808794639655\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 5209279099334833992}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\n  m_LocalPosition: {x: 0, y: 0, z: 0}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 8346701487561006864}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n--- !u!114 &3361840078200493910\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 5209279099334833992}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: afc0bae57b8d4ad0b7b36b8780e94e81, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  entity: {fileID: 6821226422995089228}\n  navMeshAgent: {fileID: 1870041204399915104}\n--- !u!1 &7885910817478870954\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: 9110435334506497852}\n  - component: {fileID: 640497755003148209}\n  - component: {fileID: 443069389080558108}\n  - component: {fileID: 2162593217294079804}\n  - component: {fileID: 585870037637814451}\n  m_Layer: 5\n  m_Name: HealthCanvas\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1\n--- !u!224 &9110435334506497852\nRectTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 7885910817478870954}\n  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}\n  m_LocalPosition: {x: 0, y: 0, z: 0}\n  m_LocalScale: {x: 0.014446577, y: 0.014446577, z: 0.014446577}\n  m_ConstrainProportionsScale: 0\n  m_Children:\n  - {fileID: 1333152179150695412}\n  - {fileID: 4227554899996539298}\n  m_Father: {fileID: 8346701487561006864}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n  m_AnchorMin: {x: 0, y: 0}\n  m_AnchorMax: {x: 0, y: 0}\n  m_AnchoredPosition: {x: 0, y: 1}\n  m_SizeDelta: {x: 100, y: 30}\n  m_Pivot: {x: 0.5, y: 0.5}\n--- !u!223 &640497755003148209\nCanvas:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 7885910817478870954}\n  m_Enabled: 1\n  serializedVersion: 3\n  m_RenderMode: 2\n  m_Camera: {fileID: 0}\n  m_PlaneDistance: 100\n  m_PixelPerfect: 0\n  m_ReceivesEvents: 1\n  m_OverrideSorting: 0\n  m_OverridePixelPerfect: 0\n  m_SortingBucketNormalizedSize: 0\n  m_VertexColorAlwaysGammaSpace: 0\n  m_AdditionalShaderChannelsFlag: 0\n  m_UpdateRectTransformForStandalone: 0\n  m_SortingLayerID: 0\n  m_SortingOrder: 0\n  m_TargetDisplay: 0\n--- !u!114 &443069389080558108\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 7885910817478870954}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  m_UiScaleMode: 0\n  m_ReferencePixelsPerUnit: 100\n  m_ScaleFactor: 1\n  m_ReferenceResolution: {x: 800, y: 600}\n  m_ScreenMatchMode: 0\n  m_MatchWidthOrHeight: 0\n  m_PhysicalUnit: 3\n  m_FallbackScreenDPI: 96\n  m_DefaultSpriteDPI: 96\n  m_DynamicPixelsPerUnit: 1\n  m_PresetInfoIsWorld: 1\n--- !u!114 &2162593217294079804\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 7885910817478870954}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: 399ed5588e8e4ecd9991c378194c5c6e, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  serializationData:\n    SerializedFormat: 2\n    SerializedBytes: \n    ReferencedUnityObjects:\n    - {fileID: 155596303304707769}\n    - {fileID: 6821226422995089228}\n    SerializedBytesString: \n    Prefab: {fileID: 0}\n    PrefabModificationsReferencedUnityObjects: []\n    PrefabModifications: []\n    SerializationNodes:\n    - Name: _healthBarImage\n      Entry: 10\n      Data: 0\n    - Name: _entityComponent\n      Entry: 10\n      Data: 1\n    - Name: _camera\n      Entry: 6\n      Data: \n--- !u!114 &585870037637814451\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 7885910817478870954}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  m_IgnoreReversedGraphics: 1\n  m_BlockingObjects: 0\n  m_BlockingMask:\n    serializedVersion: 2\n    m_Bits: 511\n--- !u!1 &8317971063330829754\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: 1333152179150695412}\n  - component: {fileID: 8989906602170439787}\n  - component: {fileID: 155596303304707769}\n  m_Layer: 5\n  m_Name: FilledPart\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1\n--- !u!224 &1333152179150695412\nRectTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8317971063330829754}\n  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}\n  m_LocalPosition: {x: 0, y: 0, z: 0}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children: []\n  m_Father: {fileID: 9110435334506497852}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n  m_AnchorMin: {x: 0.5, y: 0.5}\n  m_AnchorMax: {x: 0.5, y: 0.5}\n  m_AnchoredPosition: {x: 0, y: 0}\n  m_SizeDelta: {x: 95, y: 29}\n  m_Pivot: {x: 0.5, y: 0.5}\n--- !u!222 &8989906602170439787\nCanvasRenderer:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8317971063330829754}\n  m_CullTransparentMesh: 1\n--- !u!114 &155596303304707769\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8317971063330829754}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  m_Material: {fileID: 0}\n  m_Color: {r: 0.5849056, g: 0.03034888, b: 0.03034888, a: 1}\n  m_RaycastTarget: 1\n  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}\n  m_Maskable: 1\n  m_OnCullStateChanged:\n    m_PersistentCalls:\n      m_Calls: []\n  m_Sprite: {fileID: 21300000, guid: a877661f9771d4df7ab6778eb43eedc3, type: 3}\n  m_Type: 3\n  m_PreserveAspect: 0\n  m_FillCenter: 1\n  m_FillMethod: 0\n  m_FillAmount: 0.724\n  m_FillClockwise: 1\n  m_FillOrigin: 0\n  m_UseSpriteMesh: 0\n  m_PixelsPerUnitMultiplier: 1\n--- !u!1 &8832400115434931624\nGameObject:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  serializedVersion: 6\n  m_Component:\n  - component: {fileID: 8346701487561006864}\n  - component: {fileID: 5862305349234113313}\n  - component: {fileID: 1870041204399915104}\n  - component: {fileID: 5653707598932974151}\n  - component: {fileID: 5647677402524141504}\n  - component: {fileID: 4175814238530722871}\n  - component: {fileID: 2678358218656181817}\n  - component: {fileID: 6821226422995089228}\n  m_Layer: 3\n  m_Name: Enemy\n  m_TagString: Untagged\n  m_Icon: {fileID: 0}\n  m_NavMeshLayer: 0\n  m_StaticEditorFlags: 0\n  m_IsActive: 1\n--- !u!4 &8346701487561006864\nTransform:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8832400115434931624}\n  serializedVersion: 2\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\n  m_LocalPosition: {x: 38.47, y: 3.54, z: 26.38}\n  m_LocalScale: {x: 1, y: 1, z: 1}\n  m_ConstrainProportionsScale: 0\n  m_Children:\n  - {fileID: 9110435334506497852}\n  - {fileID: 8997590545928222891}\n  - {fileID: 1568861808794639655}\n  - {fileID: 6486291881466765562}\n  m_Father: {fileID: 0}\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\n--- !u!33 &5862305349234113313\nMeshFilter:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8832400115434931624}\n  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}\n--- !u!195 &1870041204399915104\nNavMeshAgent:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8832400115434931624}\n  m_Enabled: 1\n  m_AgentTypeID: 0\n  m_Radius: 0.5\n  m_Speed: 3.5\n  m_Acceleration: 8\n  avoidancePriority: 50\n  m_AngularSpeed: 120\n  m_StoppingDistance: 0\n  m_AutoTraverseOffMeshLink: 1\n  m_AutoBraking: 1\n  m_AutoRepath: 1\n  m_Height: 1\n  m_BaseOffset: 0.5\n  m_WalkableMask: 4294967295\n  m_ObstacleAvoidanceType: 4\n--- !u!23 &5653707598932974151\nMeshRenderer:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8832400115434931624}\n  m_Enabled: 1\n  m_CastShadows: 1\n  m_ReceiveShadows: 1\n  m_DynamicOccludee: 1\n  m_StaticShadowCaster: 0\n  m_MotionVectors: 1\n  m_LightProbeUsage: 1\n  m_ReflectionProbeUsage: 1\n  m_RayTracingMode: 2\n  m_RayTraceProcedural: 0\n  m_RenderingLayerMask: 1\n  m_RendererPriority: 0\n  m_Materials:\n  - {fileID: 2100000, guid: 3c83d38165cef74418da61dc3cd3d842, type: 2}\n  m_StaticBatchInfo:\n    firstSubMesh: 0\n    subMeshCount: 0\n  m_StaticBatchRoot: {fileID: 0}\n  m_ProbeAnchor: {fileID: 0}\n  m_LightProbeVolumeOverride: {fileID: 0}\n  m_ScaleInLightmap: 1\n  m_ReceiveGI: 1\n  m_PreserveUVs: 0\n  m_IgnoreNormalsForChartDetection: 0\n  m_ImportantGI: 0\n  m_StitchLightmapSeams: 1\n  m_SelectedEditorRenderState: 3\n  m_MinimumChartSize: 4\n  m_AutoUVMaxDistance: 0.5\n  m_AutoUVMaxAngle: 89\n  m_LightmapParameters: {fileID: 0}\n  m_SortingLayerID: 0\n  m_SortingLayer: 0\n  m_SortingOrder: 0\n  m_AdditionalVertexStreams: {fileID: 0}\n--- !u!65 &5647677402524141504\nBoxCollider:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8832400115434931624}\n  m_Material: {fileID: 0}\n  m_IncludeLayers:\n    serializedVersion: 2\n    m_Bits: 0\n  m_ExcludeLayers:\n    serializedVersion: 2\n    m_Bits: 0\n  m_LayerOverridePriority: 0\n  m_IsTrigger: 0\n  m_ProvidesContacts: 0\n  m_Enabled: 1\n  serializedVersion: 3\n  m_Size: {x: 1, y: 1, z: 1}\n  m_Center: {x: 0, y: 0, z: 0}\n--- !u!114 &4175814238530722871\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8832400115434931624}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: 9e025e92e02a4f2f838ea63a3e752166, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  serializationData:\n    SerializedFormat: 2\n    SerializedBytes: \n    ReferencedUnityObjects: []\n    SerializedBytesString: \n    Prefab: {fileID: 0}\n    PrefabModificationsReferencedUnityObjects: []\n    PrefabModifications: []\n    SerializationNodes:\n    - Name: Type\n      Entry: 3\n      Data: 0\n--- !u!54 &2678358218656181817\nRigidbody:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8832400115434931624}\n  serializedVersion: 4\n  m_Mass: 1\n  m_Drag: 0\n  m_AngularDrag: 0.05\n  m_CenterOfMass: {x: 0, y: 0, z: 0}\n  m_InertiaTensor: {x: 1, y: 1, z: 1}\n  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}\n  m_IncludeLayers:\n    serializedVersion: 2\n    m_Bits: 0\n  m_ExcludeLayers:\n    serializedVersion: 2\n    m_Bits: 0\n  m_ImplicitCom: 1\n  m_ImplicitTensor: 1\n  m_UseGravity: 1\n  m_IsKinematic: 0\n  m_Interpolate: 0\n  m_Constraints: 14\n  m_CollisionDetection: 0\n--- !u!114 &6821226422995089228\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 8832400115434931624}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: 60642a0752bd43d59b85153050cd8d99, type: 3}\n  m_Name: \n  m_EditorClassIdentifier: \n  serializationData:\n    SerializedFormat: 2\n    SerializedBytes: \n    ReferencedUnityObjects:\n    - {fileID: 11400000, guid: 721d99f71b944415bb792195e7b17976, type: 2}\n    - {fileID: 3361840078200493910}\n    - {fileID: 2421303179216561489}\n    - {fileID: 820052789442099503}\n    - {fileID: 313297737829233306}\n    SerializedBytesString: \n    Prefab: {fileID: 0}\n    PrefabModificationsReferencedUnityObjects: []\n    PrefabModifications: []\n    SerializationNodes:\n    - Name: Characteristic\n      Entry: 10\n      Data: 0\n    - Name: Movement\n      Entry: 10\n      Data: 1\n    - Name: CharacterTrigger\n      Entry: 10\n      Data: 2\n    - Name: CharacterAttacker\n      Entry: 10\n      Data: 3\n    - Name: CharacterAttackOnTrigger\n      Entry: 10\n      Data: 4\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Prefabs/Enemy.prefab b/Assets/Prefabs/Enemy.prefab
+--- a/Assets/Prefabs/Enemy.prefab	(revision dbf0ee124a46ea839bd3d30c54c9f8cdb939a44c)
++++ b/Assets/Prefabs/Enemy.prefab	(date 1704901348464)
+@@ -177,6 +177,7 @@
+   - component: {fileID: 8997590545928222891}
+   - component: {fileID: 4926111025166725709}
+   - component: {fileID: 2421303179216561489}
++  - component: {fileID: 4055872805339038055}
+   m_Layer: 2
+   m_Name: CharacterTrigger
+   m_TagString: Untagged
+@@ -230,6 +231,31 @@
+   m_Enabled: 1
+   m_EditorHideFlags: 0
+   m_Script: {fileID: 11500000, guid: 49d9e6b9d1484ce4ba681940be81c8b0, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: 
++  serializationData:
++    SerializedFormat: 2
++    SerializedBytes: 
++    ReferencedUnityObjects:
++    - {fileID: 2421303179216561489}
++    SerializedBytesString: 
++    Prefab: {fileID: 0}
++    PrefabModificationsReferencedUnityObjects: []
++    PrefabModifications: []
++    SerializationNodes:
++    - Name: Strategy
++      Entry: 10
++      Data: 0
++--- !u!114 &4055872805339038055
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 2506341692382147851}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: ea6232854c6549e19d5f9c02b10d06c6, type: 3}
+   m_Name: 
+   m_EditorClassIdentifier: 
+   serializationData:
+@@ -514,6 +540,7 @@
+   - component: {fileID: 4175814238530722871}
+   - component: {fileID: 2678358218656181817}
+   - component: {fileID: 6821226422995089228}
++  - component: {fileID: 4197324369630592480}
+   m_Layer: 3
+   m_Name: Enemy
+   m_TagString: Untagged
+@@ -701,16 +728,40 @@
+     SerializedBytes: 
+     ReferencedUnityObjects:
+     - {fileID: 11400000, guid: 721d99f71b944415bb792195e7b17976, type: 2}
++    SerializedBytesString: 
++    Prefab: {fileID: 0}
++    PrefabModificationsReferencedUnityObjects: []
++    PrefabModifications: []
++    SerializationNodes:
++    - Name: Characteristic
++      Entry: 10
++      Data: 0
++--- !u!114 &4197324369630592480
++MonoBehaviour:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 8832400115434931624}
++  m_Enabled: 1
++  m_EditorHideFlags: 0
++  m_Script: {fileID: 11500000, guid: 948bc40f7d2e4facacb3bda42666741a, type: 3}
++  m_Name: 
++  m_EditorClassIdentifier: 
++  serializationData:
++    SerializedFormat: 2
++    SerializedBytes: 
++    ReferencedUnityObjects:
++    - {fileID: 6821226422995089228}
+     - {fileID: 3361840078200493910}
+     - {fileID: 2421303179216561489}
+     - {fileID: 820052789442099503}
+-    - {fileID: 313297737829233306}
+     SerializedBytesString: 
+     Prefab: {fileID: 0}
+     PrefabModificationsReferencedUnityObjects: []
+     PrefabModifications: []
+     SerializationNodes:
+-    - Name: Characteristic
++    - Name: Enemy
+       Entry: 10
+       Data: 0
+     - Name: Movement
+@@ -722,6 +773,3 @@
+     - Name: CharacterAttacker
+       Entry: 10
+       Data: 3
+-    - Name: CharacterAttackOnTrigger
+-      Entry: 10
+-      Data: 4
+Index: Assets/Scripts/Components/Entity/EntityComponent.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using Data.ScriptableObjects;\nusing Sirenix.OdinInspector;\nusing Sirenix.Serialization;\n\nnamespace Components.Entity\n{\n    public abstract class EntityComponent: SerializedMonoBehaviour\n    {\n        public Business.Entities.Entity Entity { get; }\n\n        [OdinSerialize]\n        private EntityCharacteristic Characteristic { get; set; }\n        \n        [OdinSerialize]\n        public Movement Movement { get; private set; }\n\n        protected EntityComponent(Business.Entities.Entity entity)\n        {\n            Entity = entity;\n        }\n\n        private void Start()\n        {\n            Characteristic?.Apply(Entity);\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/EntityComponent.cs b/Assets/Scripts/Components/Entity/EntityComponent.cs
+--- a/Assets/Scripts/Components/Entity/EntityComponent.cs	(revision dbf0ee124a46ea839bd3d30c54c9f8cdb939a44c)
++++ b/Assets/Scripts/Components/Entity/EntityComponent.cs	(date 1704896685194)
+@@ -10,9 +10,6 @@
+ 
+         [OdinSerialize]
+         private EntityCharacteristic Characteristic { get; set; }
+-        
+-        [OdinSerialize]
+-        public Movement Movement { get; private set; }
+ 
+         protected EntityComponent(Business.Entities.Entity entity)
+         {
+Index: Assets/Scripts/Components/Entity/Enemy/EnemyZone/ZonedEnemy.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using Sirenix.OdinInspector;\nusing Sirenix.Serialization;\nusing UnityEngine;\n\nnamespace Components.Entity.Enemy.EnemyZone\n{\n    public class ZonedEnemy: SerializedMonoBehaviour\n    {\n        [OdinSerialize]\n        public EnemyZone EnemyZone { get; set; }\n        \n        [OdinSerialize]\n        public EnemyComponent Enemy { get; set; }\n        \n        [OdinSerialize]\n        public ICharacterTrigger CharacterTrigger { get; set; }\n\n        private Vector3 _initialPosition;\n\n        private void Start()\n        {\n            _initialPosition = transform.position;\n            CharacterTrigger.CharacterLeavedTrigger += CharacterTriggerOnCharacterLeavedTrigger;\n        }\n\n        private void CharacterTriggerOnCharacterLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)\n        {\n            Enemy.Movement.MoveTo(_initialPosition);\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/EnemyZone/ZonedEnemy.cs b/Assets/Scripts/Components/Entity/Enemy/EnemyZone/ZonedEnemy.cs
+--- a/Assets/Scripts/Components/Entity/Enemy/EnemyZone/ZonedEnemy.cs	(revision dbf0ee124a46ea839bd3d30c54c9f8cdb939a44c)
++++ b/Assets/Scripts/Components/Entity/Enemy/EnemyZone/ZonedEnemy.cs	(date 1704901229024)
+@@ -8,12 +8,12 @@
+     {
+         [OdinSerialize]
+         public EnemyZone EnemyZone { get; set; }
+-        
++
+         [OdinSerialize]
+-        public EnemyComponent Enemy { get; set; }
++        public CharacterTrigger CharacterTrigger { get; set; }
+         
+         [OdinSerialize]
+-        public ICharacterTrigger CharacterTrigger { get; set; }
++        public Movement EnemyMovement { get; set; }
+ 
+         private Vector3 _initialPosition;
+ 
+@@ -25,7 +25,7 @@
+ 
+         private void CharacterTriggerOnCharacterLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)
+         {
+-            Enemy.Movement.MoveTo(_initialPosition);
++            EnemyMovement.MoveTo(_initialPosition);
+         }
+     }
+ }
+\ No newline at end of file
+Index: Assets/Scripts/Components/Entity/Enemy/EnemyZone/EnemyZone.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System;\nusing System.Collections.Generic;\nusing System.Linq;\nusing Components.Entity.Character;\nusing Sirenix.OdinInspector;\nusing Sirenix.Serialization;\nusing UnityEngine;\n\nnamespace Components.Entity.Enemy.EnemyZone\n{\n    public class EnemyZone: SerializedMonoBehaviour\n    {\n        [OdinSerialize]\n        private List<EnemySpawn> _entities;\n        \n        [OdinSerialize]\n        private float _spawnRadius = 5f;\n\n        [OdinSerialize]\n        private bool _attackTogether = true;\n\n        private List<ZonedEnemy> _spawnedEntities = new();\n        \n        private int _triggeredEnemiesCount;\n        \n        private CustomCharacterTrigger _characterTrigger = new ();\n\n        private bool IsTriggeredFirst => _triggeredEnemiesCount == 1;\n\n        private void Awake()\n        {\n            SpawnEntities();\n        }\n\n        private void SpawnEntities()\n        {\n            var allSpawnedEntities = _entities.SelectMany(x => Enumerable.Repeat(x.Prefab, x.Count)).ToList();\n            var angleStep = 360f / allSpawnedEntities.Count;\n            var angle = 0f;\n            \n            foreach (var entity in allSpawnedEntities)\n            {\n                var spawnedEntity = Instantiate(entity, CountSpawnPosition(angle), Quaternion.identity);\n                _spawnedEntities.Add(AddZonedEnemyComponent(spawnedEntity));\n                angle += angleStep;\n            }\n        }\n\n        private ZonedEnemy AddZonedEnemyComponent(GameObject obj)\n        {\n            var zonedEnemy = obj.AddComponent<ZonedEnemy>();\n            zonedEnemy.EnemyZone = this;\n            zonedEnemy.Enemy = obj.GetComponent<EnemyComponent>();\n\n            if (_attackTogether)\n            {\n                zonedEnemy.CharacterTrigger = _characterTrigger;\n                zonedEnemy.Enemy.CharacterTrigger.CharacterTriggered += EnemyTriggered;\n                zonedEnemy.Enemy.CharacterTrigger.CharacterLeavedTrigger += EnemyLeavedTrigger;\n                zonedEnemy.Enemy.CharacterAttackOnTrigger.CharacterTrigger = _characterTrigger;\n            }\n            else\n            {\n                zonedEnemy.CharacterTrigger = zonedEnemy.Enemy.CharacterTrigger;\n            }\n\n            return zonedEnemy;\n        }\n\n        private void EnemyLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)\n        {\n            _triggeredEnemiesCount--;\n            \n            if (_triggeredEnemiesCount == 0)\n            {\n                _characterTrigger.LeaveTrigger(e.Character);\n            }\n        }\n\n        private void EnemyTriggered(object sender, TriggeredCharacterEnemyEventArgs e)\n        {\n            _triggeredEnemiesCount++;\n\n            if (IsTriggeredFirst)\n            {\n                _characterTrigger.Trigger(e.Character);\n            }\n        }\n\n        private Vector3 CountSpawnPosition(float angle)\n        {\n            return new Vector3(\n                Mathf.Cos(angle * Mathf.Deg2Rad) * _spawnRadius,\n                0, \n                Mathf.Sin(angle * Mathf.Deg2Rad) * _spawnRadius\n            ) + transform.position;\n        }\n    }\n\n    public class CustomCharacterTrigger: ICharacterTrigger\n    {\n        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterTriggered;\n\n        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterLeavedTrigger;\n\n        public void Trigger(CharacterComponent characterComponent)\n        {\n            CharacterTriggered?.Invoke(this, new TriggeredCharacterEnemyEventArgs()\n            {\n                    Character = characterComponent\n            });\n        }\n        \n        public void LeaveTrigger(CharacterComponent characterComponent)\n        {\n            CharacterLeavedTrigger?.Invoke(this, new TriggeredCharacterEnemyEventArgs()\n            {\n                Character = characterComponent\n            });\n        }\n    }\n\n    public class EnemySpawn\n    {\n        [OdinSerialize]\n        public GameObject Prefab { get; set; }\n        \n        [OdinSerialize]\n        public int Count { get; set; }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/EnemyZone/EnemyZone.cs b/Assets/Scripts/Components/Entity/Enemy/EnemyZone/EnemyZone.cs
+--- a/Assets/Scripts/Components/Entity/Enemy/EnemyZone/EnemyZone.cs	(revision dbf0ee124a46ea839bd3d30c54c9f8cdb939a44c)
++++ b/Assets/Scripts/Components/Entity/Enemy/EnemyZone/EnemyZone.cs	(date 1704901223652)
+@@ -23,8 +23,10 @@
+         
+         private int _triggeredEnemiesCount;
+         
+-        private CustomCharacterTrigger _characterTrigger = new ();
++        private CustomCharacterTrigger _characterTrigger = new();
+ 
++        private ICharacterTrigger _trueTriggerStrategy;
++
+         private bool IsTriggeredFirst => _triggeredEnemiesCount == 1;
+ 
+         private void Awake()
+@@ -49,19 +51,18 @@
+         private ZonedEnemy AddZonedEnemyComponent(GameObject obj)
+         {
+             var zonedEnemy = obj.AddComponent<ZonedEnemy>();
++            var enemyHub = obj.GetComponent<EnemyHub>();
++            
+             zonedEnemy.EnemyZone = this;
+-            zonedEnemy.Enemy = obj.GetComponent<EnemyComponent>();
++            zonedEnemy.EnemyMovement = enemyHub.Movement;
++            zonedEnemy.CharacterTrigger = enemyHub.CharacterTrigger;
+ 
+             if (_attackTogether)
+             {
+-                zonedEnemy.CharacterTrigger = _characterTrigger;
+-                zonedEnemy.Enemy.CharacterTrigger.CharacterTriggered += EnemyTriggered;
+-                zonedEnemy.Enemy.CharacterTrigger.CharacterLeavedTrigger += EnemyLeavedTrigger;
+-                zonedEnemy.Enemy.CharacterAttackOnTrigger.CharacterTrigger = _characterTrigger;
+-            }
+-            else
+-            {
+-                zonedEnemy.CharacterTrigger = zonedEnemy.Enemy.CharacterTrigger;
++                _trueTriggerStrategy = enemyHub.CharacterTrigger.Strategy;
++                _trueTriggerStrategy.CharacterTriggered += EnemyTriggered;
++                _trueTriggerStrategy.CharacterLeavedTrigger += EnemyLeavedTrigger;
++                enemyHub.CharacterTrigger.Strategy = _characterTrigger;
+             }
+ 
+             return zonedEnemy;
+Index: Assets/Scripts/Components/Entity/Enemy/CharacterColliderTrigger.cs.meta
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/CharacterColliderTrigger.cs.meta b/Assets/Scripts/Components/Entity/Enemy/CharacterColliderTrigger.cs.meta
+new file mode 100644
+--- /dev/null	(date 1704900531712)
++++ b/Assets/Scripts/Components/Entity/Enemy/CharacterColliderTrigger.cs.meta	(date 1704900531712)
+@@ -0,0 +1,3 @@
++fileFormatVersion: 2
++guid: ea6232854c6549e19d5f9c02b10d06c6
++timeCreated: 1704900531
+\ No newline at end of file
+Index: Assets/Scripts/Components/Entity/Enemy/CharacterColliderTrigger.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/CharacterColliderTrigger.cs b/Assets/Scripts/Components/Entity/Enemy/CharacterColliderTrigger.cs
+new file mode 100644
+--- /dev/null	(date 1704900618329)
++++ b/Assets/Scripts/Components/Entity/Enemy/CharacterColliderTrigger.cs	(date 1704900618329)
+@@ -0,0 +1,40 @@
++using System;
++using Common;
++using Components.Entity.Character;
++using Sirenix.OdinInspector;
++using UnityEngine;
++
++namespace Components.Entity.Enemy
++{
++    [RequireComponent(typeof(Collider))]
++    public class CharacterColliderTrigger: SerializedMonoBehaviour, ICharacterTrigger
++    {
++        private readonly CachedComponentResolver<CharacterComponent> _cachedCharacter = new(5);
++        
++        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterTriggered; 
++
++        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterLeavedTrigger;
++        
++        private void OnTriggerEnter(Collider other)
++        {
++            if (_cachedCharacter.TryResolve(other, out var character))
++            {
++                CharacterTriggered?.Invoke(this, new TriggeredCharacterEnemyEventArgs
++                {
++                        Character = character
++                });
++            }
++        }
++        
++        private void OnTriggerExit(Collider other)
++        {
++            if (_cachedCharacter.TryResolve(other, out var character))
++            {
++                CharacterLeavedTrigger?.Invoke(this, new TriggeredCharacterEnemyEventArgs
++                {
++                        Character = character
++                });
++            }
++        }
++    }
++}
+\ No newline at end of file
+Index: Assets/Scripts/Common/CachedComponentResolver.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System.Collections.Generic;\nusing UnityEngine;\n\nnamespace Common\n{\n    public class CachedComponentResolver<T> where T : MonoBehaviour\n    {\n        private readonly int _maxCachedObjects;\n        \n        private readonly Dictionary<GameObject, LinkedListNode<KeyValuePair<GameObject, T>>> _cache;\n        \n        private readonly LinkedList<KeyValuePair<GameObject, T>> _lruList;\n\n        public CachedComponentResolver(int maxCachedObjects = 255)\n        {\n            _maxCachedObjects = maxCachedObjects;\n            _cache = new Dictionary<GameObject, LinkedListNode<KeyValuePair<GameObject, T>>>();\n            _lruList = new LinkedList<KeyValuePair<GameObject, T>>();\n        }\n\n        public T Resolve(Component component) => Resolve(component.gameObject);\n        \n\n        public T Resolve(GameObject gameObject)\n        {\n            if (_cache.TryGetValue(gameObject, out var node))\n            {\n                _lruList.Remove(node);\n                _lruList.AddFirst(node);\n                return node.Value.Value;\n            }\n\n            var component = gameObject.GetComponent<T>();\n            AddToCache(gameObject, component);\n            return component;\n        }\n        \n        public bool TryResolve(Component component, out T resolvedComponent) => TryResolve(component.gameObject, out resolvedComponent);\n\n        public bool TryResolve(GameObject gameObject, out T component)\n        {\n            if (_cache.TryGetValue(gameObject, out var node))\n            {\n                _lruList.Remove(node);\n                _lruList.AddFirst(node);\n                component = node.Value.Value;\n                return component != null;\n            }\n\n            var isSuccess = gameObject.TryGetComponent(out component);\n            AddToCache(gameObject, component);\n            return isSuccess;\n        }\n\n        private void AddToCache(GameObject gameObject, T component)\n        {\n            if (_cache.Count >= _maxCachedObjects)\n            {\n                var lastNode = _lruList.Last;\n                _cache.Remove(lastNode.Value.Key);\n                _lruList.RemoveLast();\n            }\n\n            var newNode = new LinkedListNode<KeyValuePair<GameObject, T>>(\n                new KeyValuePair<GameObject, T>(gameObject, component));\n            _lruList.AddFirst(newNode);\n            _cache[gameObject] = newNode;\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Common/CachedComponentResolver.cs b/Assets/Scripts/Common/CachedComponentResolver.cs
+--- a/Assets/Scripts/Common/CachedComponentResolver.cs	(revision dbf0ee124a46ea839bd3d30c54c9f8cdb939a44c)
++++ b/Assets/Scripts/Common/CachedComponentResolver.cs	(date 1704897296840)
+@@ -9,7 +9,7 @@
+         
+         private readonly Dictionary<GameObject, LinkedListNode<KeyValuePair<GameObject, T>>> _cache;
+         
+-        private readonly LinkedList<KeyValuePair<GameObject, T>> _lruList;
++        private readonly LinkedList<KeyValuePair<GameObject, T>> _lruList;  
+ 
+         public CachedComponentResolver(int maxCachedObjects = 255)
+         {
+@@ -30,7 +30,7 @@
+                 return node.Value.Value;
+             }
+ 
+-            var component = gameObject.GetComponent<T>();
++            var component = gameObject.GetComponent<T>() ?? gameObject.GetComponentInChildren<T>();
+             AddToCache(gameObject, component);
+             return component;
+         }
+@@ -48,6 +48,13 @@
+             }
+ 
+             var isSuccess = gameObject.TryGetComponent(out component);
++
++            if (!isSuccess)
++            {
++                component = gameObject.GetComponentInChildren<T>();
++                isSuccess = component is not null;
++            }
++            
+             AddToCache(gameObject, component);
+             return isSuccess;
+         }
+Index: Assets/Scripts/Components/Entity/Enemy/EnemyHub.cs.meta
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/EnemyHub.cs.meta b/Assets/Scripts/Components/Entity/Enemy/EnemyHub.cs.meta
+new file mode 100644
+--- /dev/null	(date 1704898451787)
++++ b/Assets/Scripts/Components/Entity/Enemy/EnemyHub.cs.meta	(date 1704898451787)
+@@ -0,0 +1,3 @@
++fileFormatVersion: 2
++guid: 948bc40f7d2e4facacb3bda42666741a
++timeCreated: 1704898451
+\ No newline at end of file
+Index: Assets/Scripts/Components/Entity/Enemy/EnemyHub.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/EnemyHub.cs b/Assets/Scripts/Components/Entity/Enemy/EnemyHub.cs
+new file mode 100644
+--- /dev/null	(date 1704900741977)
++++ b/Assets/Scripts/Components/Entity/Enemy/EnemyHub.cs	(date 1704900741977)
+@@ -0,0 +1,20 @@
++using Sirenix.OdinInspector;
++using Sirenix.Serialization;
++
++namespace Components.Entity.Enemy
++{
++    public class EnemyHub: SerializedMonoBehaviour
++    {
++        [OdinSerialize]
++        public EnemyComponent Enemy { get; private set; }
++
++        [OdinSerialize]
++        public Movement Movement { get; private set; }
++
++        [OdinSerialize]
++        public CharacterTrigger CharacterTrigger { get; private set; }
++
++        [OdinSerialize]
++        public EnemyCharacterAttacker CharacterAttacker { get; private set; }
++    }
++}
+\ No newline at end of file
+Index: Assets/Scripts/Components/Entity/Enemy/CharacterTrigger.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System;\nusing Common;\nusing Components.Entity.Character;\nusing Sirenix.OdinInspector;\nusing UnityEngine;\n\nnamespace Components.Entity.Enemy\n{\n    [RequireComponent(typeof(Collider))]\n    public class CharacterTrigger: SerializedMonoBehaviour, ICharacterTrigger\n    {\n        private readonly CachedComponentResolver<CharacterComponent> _cachedCharacter = new(5);\n\n        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterTriggered; \n        \n        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterLeavedTrigger; \n\n        private void OnTriggerEnter(Collider other)\n        {\n            if (_cachedCharacter.TryResolve(other, out var character))\n            {\n                CharacterTriggered?.Invoke(this, new TriggeredCharacterEnemyEventArgs\n                {\n                    Character = character\n                });\n            }\n        }\n        \n        private void OnTriggerExit(Collider other)\n        {\n            if (_cachedCharacter.TryResolve(other, out var character))\n            {\n                CharacterLeavedTrigger?.Invoke(this, new TriggeredCharacterEnemyEventArgs\n                {\n                    Character = character\n                });\n            }\n        }\n    }\n\n    public class TriggeredCharacterEnemyEventArgs: EventArgs\n    {\n        public CharacterComponent Character { get; set; }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/CharacterTrigger.cs b/Assets/Scripts/Components/Entity/Enemy/CharacterTrigger.cs
+--- a/Assets/Scripts/Components/Entity/Enemy/CharacterTrigger.cs	(revision dbf0ee124a46ea839bd3d30c54c9f8cdb939a44c)
++++ b/Assets/Scripts/Components/Entity/Enemy/CharacterTrigger.cs	(date 1704901422948)
+@@ -1,40 +1,48 @@
+ using System;
+-using Common;
+ using Components.Entity.Character;
+ using Sirenix.OdinInspector;
+-using UnityEngine;
++using Sirenix.Serialization;
+ 
+ namespace Components.Entity.Enemy
+ {
+-    [RequireComponent(typeof(Collider))]
+     public class CharacterTrigger: SerializedMonoBehaviour, ICharacterTrigger
+     {
+-        private readonly CachedComponentResolver<CharacterComponent> _cachedCharacter = new(5);
++        private ICharacterTrigger _trigger;
++
++        [OdinSerialize]
++        public ICharacterTrigger Strategy
++        {
++            get => _trigger;
++            set
++            {
++                if (_trigger == value)
++                    return;
++                
++                if (_trigger is not null)
++                {
++                    _trigger.CharacterLeavedTrigger -= TriggerOnCharacterLeavedTrigger;
++                    _trigger.CharacterTriggered -= TriggerOnCharacterTriggered;
++                }
++
++                _trigger = value;
++                _trigger.CharacterTriggered += TriggerOnCharacterTriggered;
++                _trigger.CharacterLeavedTrigger += TriggerOnCharacterLeavedTrigger;
++            }
++        }
+ 
+         public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterTriggered; 
+         
+-        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterLeavedTrigger; 
++        public event EventHandler<TriggeredCharacterEnemyEventArgs> CharacterLeavedTrigger;
++        
+ 
+-        private void OnTriggerEnter(Collider other)
++        private void TriggerOnCharacterTriggered(object sender, TriggeredCharacterEnemyEventArgs e)
+         {
+-            if (_cachedCharacter.TryResolve(other, out var character))
+-            {
+-                CharacterTriggered?.Invoke(this, new TriggeredCharacterEnemyEventArgs
+-                {
+-                    Character = character
+-                });
+-            }
++            CharacterTriggered?.Invoke(this, e);
+         }
+-        
+-        private void OnTriggerExit(Collider other)
++
++        private void TriggerOnCharacterLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)
+         {
+-            if (_cachedCharacter.TryResolve(other, out var character))
+-            {
+-                CharacterLeavedTrigger?.Invoke(this, new TriggeredCharacterEnemyEventArgs
+-                {
+-                    Character = character
+-                });
+-            }
++            CharacterLeavedTrigger?.Invoke(this, e);
+         }
+     }
+ 
+Index: Assets/Scripts/Components/Entity/Enemy/EnemyComponent.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System;\nusing System.Collections;\nusing Sirenix.Serialization;\nusing UnityEngine;\n\nnamespace Components.Entity.Enemy\n{\n    public class EnemyComponent: EntityComponent\n    {\n        [OdinSerialize]\n        public ICharacterTrigger CharacterTrigger { get; private set; }\n        \n        [OdinSerialize]\n        public EnemyCharacterAttacker CharacterAttacker { get; private set; }\n        \n        [OdinSerialize]\n        public AttackCharacterOnTriggerComponent CharacterAttackOnTrigger { get; private set; }\n        \n        public EnemyComponent() : base(new Business.Entities.Entity())\n        {\n            Entity.Health.Died += HealthOnDied;\n        }\n\n        private void HealthOnDied(object sender, EventArgs e)\n        {\n            StartCoroutine(DieAfterAll());\n        }\n\n        private IEnumerator DieAfterAll()\n        {\n            yield return new WaitForFixedUpdate();\n            Destroy(gameObject);\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/Components/Entity/Enemy/EnemyComponent.cs b/Assets/Scripts/Components/Entity/Enemy/EnemyComponent.cs
+--- a/Assets/Scripts/Components/Entity/Enemy/EnemyComponent.cs	(revision dbf0ee124a46ea839bd3d30c54c9f8cdb939a44c)
++++ b/Assets/Scripts/Components/Entity/Enemy/EnemyComponent.cs	(date 1704896479710)
+@@ -7,15 +7,6 @@
+ {
+     public class EnemyComponent: EntityComponent
+     {
+-        [OdinSerialize]
+-        public ICharacterTrigger CharacterTrigger { get; private set; }
+-        
+-        [OdinSerialize]
+-        public EnemyCharacterAttacker CharacterAttacker { get; private set; }
+-        
+-        [OdinSerialize]
+-        public AttackCharacterOnTriggerComponent CharacterAttackOnTrigger { get; private set; }
+-        
+         public EnemyComponent() : base(new Business.Entities.Entity())
+         {
+             Entity.Health.Died += HealthOnDied;
