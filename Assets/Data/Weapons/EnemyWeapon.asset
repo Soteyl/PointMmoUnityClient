@@ -32,7 +32,7 @@ MonoBehaviour:
       Data: 1
     - Name: MinDamage
       Entry: 3
-      Data: 2
+      Data: 1
     - Name: MaxDamage
       Entry: 3
-      Data: 5
+      Data: 3

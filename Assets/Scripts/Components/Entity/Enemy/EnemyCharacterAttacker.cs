@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Components.Entity.Character;
+using MEC;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -15,31 +17,24 @@ namespace Components.Entity.Enemy
         [OdinSerialize]
         private EnemyComponent _enemyComponent;
         
-        private Coroutine _attackCoroutine;
+        private CoroutineHandle _attackCoroutine;
 
         public void StartAttack(CharacterComponent character)
         {
-            if (_attackCoroutine is not null)
-            {
-                StopCoroutine(_attackCoroutine);
-                _attackCoroutine = null;
-            }
-            _attackCoroutine = StartCoroutine(AttackCharacter(character));
+            _attackCoroutine = Timing.RunCoroutineSingleton(_AttackCharacter(character).CancelWith(this), 
+                _attackCoroutine, SingletonBehavior.Overwrite);
         }
         
         public void StopAttack()
         {
-            if (_attackCoroutine is null) return;
-            
-            StopCoroutine(_attackCoroutine);
-            _attackCoroutine = null;
+            Timing.KillCoroutines(_attackCoroutine);
         }
         
-        private IEnumerator AttackCharacter(CharacterComponent character)
+        private IEnumerator<float> _AttackCharacter(CharacterComponent character)
         {
             while (true)
             {
-                yield return new WaitForFixedUpdate();
+                yield return Timing.WaitForOneFrame;
                 if (!character.Entity.Health.IsAlive || !_enemyComponent.Entity.Health.IsAlive) 
                     yield break;
                 if (Vector3.Distance(_enemyComponent.transform.position, character.transform.position) > _enemyComponent.Entity.Weapon.WeaponData.Distance)

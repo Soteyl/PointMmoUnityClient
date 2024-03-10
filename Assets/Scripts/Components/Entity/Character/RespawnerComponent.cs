@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Business.HealthPoints;
+using MEC;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using TMPro;
@@ -27,15 +29,15 @@ namespace Components.Entity.Character
 
         private void CharacterOnDied(object sender, EventArgs e)
         {
-            StartCoroutine(WaitBeforeResurrect());
+            Timing.RunCoroutine(_WaitBeforeResurrect());
         }
 
-        private IEnumerator WaitBeforeResurrect()
+        private IEnumerator<float> _WaitBeforeResurrect()
         {
             for (int i = 3; i > 0; i--)
             {
                 Text.text = i.ToString();
-                yield return new WaitForSeconds(1);
+                yield return Timing.WaitForSeconds(1);
             }
 
             Text.text = "";

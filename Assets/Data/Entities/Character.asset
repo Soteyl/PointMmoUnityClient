@@ -27,7 +27,7 @@ MonoBehaviour:
       Data: 8
     - Name: MaxHealth
       Entry: 3
-      Data: 100
+      Data: 150
     - Name: DefaultWeaponData
       Entry: 10
       Data: 0

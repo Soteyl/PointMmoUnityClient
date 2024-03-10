@@ -31,21 +31,36 @@ namespace Business.Entities
 
         public IMultipliedValue Speed => _speed;
 
-        public IWeapon Weapon => _weapon;
+        public IWeapon Weapon => _weapon; // todo weapon manager
+        
+        public event EventHandler<WeaponAttackedEventArgs> Attacked;
 
         /// <param name="weapon">new weapon</param>
         /// <returns>Old weapon</returns>
         public IWeapon EquipWeapon(IWeapon weapon)
         {
             var oldWeapon = _weapon;
+            if (_weapon != null)
+                _weapon.Attacked -= WeaponOnAttacked;
+            
             _weapon = weapon;
+            if (_weapon != null)
+                _weapon.Attacked += WeaponOnAttacked;
+            
             return oldWeapon;
+        }
+
+        private void WeaponOnAttacked(object sender, WeaponAttackedEventArgs e)
+        {
+            Attacked?.Invoke(this, e);
         }
 
         public async Task AttackAsync(Entity entity, CancellationToken cancellationToken = default)
         {
             if (Health.IsAlive)
+            {
                 await _weapon.AttackAsync(this, entity, cancellationToken);
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Components.Entity.Enemy
@@ -12,6 +11,9 @@ namespace Components.Entity.Enemy
             Entity.Health.Died += HealthOnDied;
         }
 
+        /// <summary>
+        /// Workaround for Destroying after applying all events
+        /// </summary>
         private void HealthOnDied(object sender, EventArgs e)
         {
             StartCoroutine(DieAfterAll());
