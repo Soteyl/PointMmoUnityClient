@@ -43,9 +43,13 @@ namespace Components
             MoveToAndThen(position, null);
         }
 
-        public void MoveToAndThen(Vector3 position, Action<MovementStatus> action)
+        // todo move to transform for attacks
+        public void MoveToAndThen(Vector3 position, Action<MovementStatus> action, float? stoppingDistance = null)
         {
             _actionOnFinishMove?.Invoke(MovementStatus.Canceled); 
+            
+            if (stoppingDistance.HasValue)
+                position = GetPointNearTarget(transform.position, position, stoppingDistance.Value);
             
             navMeshAgent.SetDestination(position);
 
@@ -63,6 +67,13 @@ namespace Components
                 navMeshAgent.ResetPath();
 
             _actionOnFinishMove?.Invoke(MovementStatus.Finished);
+        }
+        
+        private Vector3 GetPointNearTarget(Vector3 currentPosition, Vector3 targetPosition, float stoppingDistance)
+        {
+            Vector3 directionToEntity = (targetPosition - currentPosition).normalized;
+            Vector3 destinationPoint = targetPosition - directionToEntity * (Math.Max(stoppingDistance, StoppingDistance) - 0.5f);
+            return destinationPoint;
         }
 
         private void OnDestroy()

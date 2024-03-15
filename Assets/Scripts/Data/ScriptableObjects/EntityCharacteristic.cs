@@ -10,13 +10,13 @@ namespace Data.ScriptableObjects
     public class EntityCharacteristic: SerializedScriptableObject
     {
         [OdinSerialize]
-        public float Speed { get; set; }
+        public float Speed { get; private set; }
         
         [OdinSerialize]
-        public int MaxHealth { get; set; }
+        public int MaxHealth { get; private set; }
         
         [OdinSerialize]
-        public WeaponData DefaultWeaponData { get; set; }
+        public WeaponData DefaultWeaponData { get; private set; }
 
         public void Apply(Entity entity)
         {

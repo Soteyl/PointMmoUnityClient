@@ -152,6 +152,27 @@ MonoBehaviour:
     - Name: _meshRenderer
       Entry: 10
       Data: 1
+    - Name: _flashColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _flashDuration
+      Entry: 4
+      Data: 0.2
 --- !u!1 &1945257621105147851
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,7 +771,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Type
       Entry: 3
-      Data: 0
+      Data: 1
 --- !u!54 &2678358218656181817
 Rigidbody:
   m_ObjectHideFlags: 0

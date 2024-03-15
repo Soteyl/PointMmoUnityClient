@@ -31,18 +31,10 @@ namespace Components.Entity.Character
         private void MouseClicked(object sender, InteractableObjectEventArgs e)
         {
             if (e.Object.Type == InteractableObjectType.Enemy && _cachedEnemy.TryResolve(e.Object, out var entity))
-                _movementComponent.MoveToAndThen(GetPointNearTarget(entity), (st) =>
+                _movementComponent.MoveToAndThen(entity.transform.position, (st) =>
                 {
                     if (st == MovementStatus.Finished) Character.Entity.AttackAsync(entity.Entity);
-                });
-        }
-        
-        private Vector3 GetPointNearTarget(EntityComponent targetEntity)
-        {
-            var position = targetEntity.transform.position;
-            Vector3 directionToEntity = (position - Character.transform.position).normalized;
-            Vector3 destinationPoint = position - directionToEntity * (Math.Max(Character.Entity.Weapon.WeaponData.Distance, _movementComponent.StoppingDistance) - 0.5f);
-            return destinationPoint;
+                }, Character.Entity.Weapon.WeaponData.Distance);
         }
     }
 }

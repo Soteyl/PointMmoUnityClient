@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Common.Hub
 {
+    /// <summary>
+    /// Hub for accessing components from GameObject
+    /// </summary>
     public abstract class ComponentHub<THub>: SerializedMonoBehaviour
             where THub: ComponentHub<THub>
     {

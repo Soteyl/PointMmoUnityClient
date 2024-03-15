@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using Business.HealthPoints;
+using Components.Entity;
 using MEC;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
-namespace Components.Entity
+namespace Components.Animation
 {
     public class DamageFlash: SerializedMonoBehaviour
     {

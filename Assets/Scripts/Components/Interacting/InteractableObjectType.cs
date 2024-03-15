@@ -2,7 +2,8 @@
 {
     public enum InteractableObjectType
     {
-        Enemy = 0,
-        Floor = 1,
+        Floor = 0,
+        Enemy = 1,
+        Item = 2
     }
 }
