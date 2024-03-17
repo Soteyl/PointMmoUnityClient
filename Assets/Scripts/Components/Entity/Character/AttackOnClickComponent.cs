@@ -30,7 +30,7 @@ namespace Components.Entity.Character
 
         private void MouseClicked(object sender, InteractableObjectEventArgs e)
         {
-            if (e.Object.Type == InteractableObjectType.Enemy && _cachedEnemy.TryResolve(e.Object, out var entity))
+            if (e.Interaction.Object.Type == InteractableObjectType.Enemy && _cachedEnemy.TryResolve(e.Interaction.Object, out var entity))
                 _movementComponent.MoveToAndThen(entity.transform.position, (st) =>
                 {
                     if (st == MovementStatus.Finished) Character.Entity.AttackAsync(entity.Entity);

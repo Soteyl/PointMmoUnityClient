@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Components.Interacting;
@@ -19,12 +20,15 @@ namespace Components
 
         [OdinSerialize]
         private LayerMask _interactableLayer;
+        
+        [OdinSerialize]
+        private float _holdDelay = 0.2f;
 
         private InputAction _mouseClickAction;
 
         private Camera _mainCamera;
 
-        private bool _isHold;
+        private DateTime? _holdAt;
         
         private bool _isMainCameraNull;
 
@@ -51,13 +55,15 @@ namespace Components
 
         private void Update()
         {
-            if (_isHold && TryGetInteractableEventArgs(out var eventArgs))
+            if (_holdAt.HasValue 
+                && _holdAt.Value.AddSeconds(_holdDelay) < DateTime.Now
+                && TryGetInteractableEventArgs(out var eventArgs))
                 InteractableObjectHold?.Invoke(this, eventArgs);
         }
 
         private void OnMouseRelease(InputAction.CallbackContext obj)
         {
-            _isHold = false;
+            _holdAt = null;
             if (!TryGetInteractableEventArgs(out var eventArgs)) return;
             InteractableObjectReleased?.Invoke(this, eventArgs);
         }
@@ -65,7 +71,7 @@ namespace Components
         private void OnMouseClick(InputAction.CallbackContext obj)
         {
             if (!TryGetInteractableEventArgs(out var eventArgs)) return;
-            _isHold = true;
+            _holdAt = DateTime.Now;
             InteractableObjectInvoked?.Invoke(this, eventArgs);
         }
 
@@ -79,17 +85,20 @@ namespace Components
             var ray = _mainCamera.ScreenPointToRay(mouseClickPosition);
             var hitCount = Physics.RaycastNonAlloc(ray, hits, Mathf.Infinity, _interactableLayer);
             
-            var raycastHit = hits.Take(hitCount)
-                .Select(x => new { Point = x.point, Interactable = _cachedInteractable.Resolve(x.transform) })
-                .OrderByDescending(x => x.Interactable.Type).FirstOrDefault(x => x.Interactable.IsInteractable);
-
-            if (raycastHit is null) return false;
+            var raycastHits = hits.Take(hitCount)
+                .Select(x => new InteractableObjectEventArgs.ObjectInteraction 
+                { 
+                        HitPosition = x.point, 
+                        Object = _cachedInteractable.Resolve(x.transform) 
+                })
+                .OrderByDescending(x => x.Object.Type).Where(x => x.Object.IsInteractable).ToList();
+            
+            if (!raycastHits.Any()) return false;
 
             eventArgs = new InteractableObjectEventArgs
             {
-                Object = raycastHit.Interactable,
-                MouseClickPosition = mouseClickPosition,
-                HitPosition = raycastHit.Point
+                Interactions = raycastHits,
+                MouseClickPosition = mouseClickPosition
             };
 
             return true;
@@ -108,10 +117,20 @@ namespace Components
 
     public class InteractableObjectEventArgs : EventArgs
     {
-        public InteractableObject Object { get; set; }
+        /// <summary>
+        /// Interactable objects in order from the closest to cursor to the furthest
+        /// </summary>
+        public IEnumerable<ObjectInteraction> Interactions { get; set; }
+        
+        public ObjectInteraction Interaction => Interactions.First();
         
         public Vector3 MouseClickPosition { get; set; }
-        
-        public Vector3 HitPosition { get; set; }
+
+        public class ObjectInteraction
+        {
+            public InteractableObject Object { get; set; }
+            
+            public Vector3 HitPosition { get; set; }
+        }
     }
 }
