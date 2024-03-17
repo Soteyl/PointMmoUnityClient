@@ -18,7 +18,7 @@ namespace Components.Items
         private Vector2 _throwForce;
         
         [OdinSerialize]
-        private float fallMultiplier = 2.5f; 
+        private float _fallMultiplier = 2.5f; 
 
         public void Throw()
         {
@@ -35,7 +35,7 @@ namespace Components.Items
         {
             if (_rigidbody.velocity.y < 0)
             {
-                _rigidbody.velocity += Vector3.up * (Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime);
+                _rigidbody.velocity += Vector3.up * (Physics.gravity.y * (_fallMultiplier - 1) * Time.fixedDeltaTime);
             }
         }
         
