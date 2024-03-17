@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Business.HealthPoints;
 using Components.Entity;
@@ -51,6 +52,11 @@ namespace Components.Animation
             }
 
             material.color = oldColor;
+        }
+
+        private void OnDestroy()
+        {
+            _entity.Entity.Health.CurrentHealthUpdated -= EntityOnDamaged;
         }
     }
 }

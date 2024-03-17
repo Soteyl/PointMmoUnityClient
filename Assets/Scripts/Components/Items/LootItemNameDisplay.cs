@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Components.Items
 {
-    public class CollectableItemNameDisplay: SerializedMonoBehaviour
+    public class LootItemNameDisplay: SerializedMonoBehaviour
     {
         [OdinSerialize]
-        private CollectableItem _collectableItem;
+        private LootItem _lootItem;
 
         [OdinSerialize]
         private Camera _camera;
@@ -22,7 +22,7 @@ namespace Components.Items
         private void Awake()
         {
             _camera ??= Camera.main;
-            _localize.SetTerm("InventoryItems/" + _collectableItem.ItemData.Id);
+            _localize.SetTerm("InventoryItems/" + _lootItem.ItemData.Id);
         }
         
         private void Update()

@@ -81,7 +81,7 @@ namespace Components
             
             var raycastHit = hits.Take(hitCount)
                 .Select(x => new { Point = x.point, Interactable = _cachedInteractable.Resolve(x.transform) })
-                .OrderByDescending(x => x.Interactable.Type).FirstOrDefault();
+                .OrderByDescending(x => x.Interactable.Type).FirstOrDefault(x => x.Interactable.IsInteractable);
 
             if (raycastHit is null) return false;
 

@@ -25,7 +25,7 @@ namespace Components.Items
 
         private void OnMouseClick(object sender, InteractableObjectEventArgs e)
         {
-            if (e.Object.Type != InteractableObjectType.Item || e.Object is not CollectableItem item) return;
+            if (e.Object.Type != InteractableObjectType.Item || e.Object is not LootItem item) return;
             
             _movement.MoveToAndThen(item.transform.position, (st) =>
             {

@@ -4,13 +4,13 @@ using Sirenix.Serialization;
 
 namespace Components.Items
 {
-    public class CollectableItem: InteractableObject
+    public class LootItem: InteractableObject
     {
         [OdinSerialize]
-        public ItemData ItemData { get; private set; }
+        public ItemData ItemData { get; set; }
         
         [OdinSerialize]
-        public int Count { get; private set; }
+        public int Count { get; set; }
         
         /// <param name="collectedCount">Collected count. If null, collect all</param>
         public void Collect(int? collectedCount = null)
