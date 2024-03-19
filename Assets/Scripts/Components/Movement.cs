@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Business.Multipliers;
+using Components;
 using Components.Entity;
 using MEC;
 using UnityEngine;
@@ -38,35 +38,39 @@ namespace Components
                 navMeshAgent.ResetPath();
         }
 
-        public void MoveTo(Vector3 position)
+        public void MoveTo(MoveRequest request)
         {
-            MoveToAndThen(position, null);
-        }
+            _actionOnFinishMove?.Invoke(MovementStatus.Canceled);
+            _actionOnFinishMove = request.OnFinish;
 
-        // todo move to transform for attacks
-        public void MoveToAndThen(Vector3 position, Action<MovementStatus> action, float? stoppingDistance = null)
-        {
-            _actionOnFinishMove?.Invoke(MovementStatus.Canceled); 
+            IEnumerator<float> coroutine;
+            if (request.VectorTarget.HasValue)
+                coroutine = _WaitUntilFinishMove(() => request.VectorTarget.Value, request.StoppingDistance).CancelWith(gameObject);
+            else
+                coroutine = _WaitUntilFinishMove(() => request.TransformTarget.position, request.StoppingDistance)
+                        .CancelWith(gameObject, request.TransformTarget.gameObject);
             
-            if (stoppingDistance.HasValue)
-                position = GetPointNearTarget(transform.position, position, stoppingDistance.Value);
-            
-            navMeshAgent.SetDestination(position);
-
-            _actionOnFinishMove = action;
-            _moveCoroutine = Timing.RunCoroutineSingleton(_WaitUntilFinishMove().CancelWith(this), _moveCoroutine,
+            _moveCoroutine = Timing.RunCoroutineSingleton(coroutine, _moveCoroutine,
                 Segment.FixedUpdate, SingletonBehavior.Overwrite); 
         }
 
-        private IEnumerator<float> _WaitUntilFinishMove()
+        private IEnumerator<float> _WaitUntilFinishMove(Func<Vector3> positionFunc, float? stoppingDistance = null)
         {
-            do yield return Timing.WaitForOneFrame;
+            do
+            {
+                var position = stoppingDistance.HasValue
+                        ? GetPointNearTarget(transform.position, positionFunc(), stoppingDistance.Value) : positionFunc();
+                navMeshAgent.SetDestination(position);
+                
+                yield return Timing.WaitForOneFrame;
+            }
             while (navMeshAgent.isActiveAndEnabled && navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance * 1.02f);
                 
             if (navMeshAgent.isActiveAndEnabled)
                 navMeshAgent.ResetPath();
 
             _actionOnFinishMove?.Invoke(MovementStatus.Finished);
+            _actionOnFinishMove = null;
         }
         
         private Vector3 GetPointNearTarget(Vector3 currentPosition, Vector3 targetPosition, float stoppingDistance)
@@ -86,5 +90,19 @@ namespace Components
     {
         Finished,
         Canceled
+    }
+    
+    
+    public class MoveRequest
+    {
+        /// <summary> Should to be set if <see cref="TransformTarget"/> is not set </summary>
+        public Vector3? VectorTarget { get; set; }
+    
+        /// <summary> Should to be set if <see cref="VectorTarget"/> is not set </summary>
+        public Transform TransformTarget { get; set; }
+    
+        public Action<MovementStatus> OnFinish { get; set; }
+    
+        public float? StoppingDistance { get; set; }
     }
 }

@@ -39,18 +39,14 @@ namespace Components.Entity.Enemy
                     yield break;
                 if (Vector3.Distance(_enemyComponent.transform.position, character.transform.position) > _enemyComponent.Entity.Weapon.WeaponData.Distance)
                 {
-                    _enemyMovement.MoveTo(GetPointNearTarget(character));
+                    _enemyMovement.MoveTo(new MoveRequest()
+                    {
+                            VectorTarget = character.transform.position,
+                            StoppingDistance = _enemyComponent.Entity.Weapon.WeaponData.Distance
+                    });
                 }
                 else _ = _enemyComponent.Entity.AttackAsync(character.Entity);
             }
-        }
-        
-        private Vector3 GetPointNearTarget(EntityComponent targetEntity)
-        {
-            var position = targetEntity.transform.position;
-            Vector3 directionToEntity = (position - _enemyComponent.transform.position).normalized;
-            Vector3 destinationPoint = position - directionToEntity * (Math.Max(_enemyComponent.Entity.Weapon.WeaponData.Distance, _enemyMovement.StoppingDistance) - 0.5f);
-            return destinationPoint;
         }
     }
 }

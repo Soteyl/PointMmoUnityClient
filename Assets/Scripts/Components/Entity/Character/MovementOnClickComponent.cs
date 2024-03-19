@@ -39,7 +39,10 @@ namespace Components.Entity.Character
         private void MoveContinued(object sender, InteractableObjectEventArgs e)
         {
             if (_isMoving && e.Interactions.FirstOrDefault(x => x.Object.Type == InteractableObjectType.Floor) is not null and var floor)
-                _movementComponent.MoveTo(floor.HitPosition);
+                _movementComponent.MoveTo(new MoveRequest()
+                {
+                        VectorTarget = floor.HitPosition
+                });
         }
     }
 }

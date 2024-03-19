@@ -25,7 +25,10 @@ namespace Components.Entity.Enemy.EnemyZone
 
         private void CharacterTriggerOnCharacterLeavedTrigger(object sender, TriggeredCharacterEnemyEventArgs e)
         {
-            EnemyMovement.MoveTo(_initialPosition);
+            EnemyMovement.MoveTo(new MoveRequest()
+            {
+                    VectorTarget = _initialPosition
+            });
         }
         
         private void OnDestroy()

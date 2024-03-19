@@ -26,15 +26,18 @@ namespace Components.Items
         private void OnMouseClick(object sender, InteractableObjectEventArgs e)
         {
             if (e.Interaction.Object.Type != InteractableObjectType.Item || e.Interaction.Object is not LootItem item) return;
-            
-            _movement.MoveToAndThen(item.transform.position, (st) =>
+
+            _movement.MoveTo(new MoveRequest()
             {
-                if (st == MovementStatus.Finished)
-                {
-                    var result = _inventoryComponent.Inventory.AddItem(item.ItemData, item.Count, true);
-                    if (result.ExtraItems == 0) item.Collect();
-                }
-            }, _collectableRadius);
+                    TransformTarget = item.transform,
+                    OnFinish = (st) =>
+                    {
+                        if (st != MovementStatus.Finished) return;
+                        var result = _inventoryComponent.Inventory.AddItem(item.ItemData, item.Count, true);
+                        if (result.ExtraItems == 0) item.Collect();
+                    },
+                    StoppingDistance = _collectableRadius
+            });
         }
     }
 }

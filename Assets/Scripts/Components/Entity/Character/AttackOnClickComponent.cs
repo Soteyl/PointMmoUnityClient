@@ -1,10 +1,8 @@
-﻿using System;
-using Common;
+﻿using Common;
 using Components.Entity.Enemy;
 using Components.Interacting;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
 
 #pragma warning disable CS4014
 
@@ -31,10 +29,15 @@ namespace Components.Entity.Character
         private void MouseClicked(object sender, InteractableObjectEventArgs e)
         {
             if (e.Interaction.Object.Type == InteractableObjectType.Enemy && _cachedEnemy.TryResolve(e.Interaction.Object, out var entity))
-                _movementComponent.MoveToAndThen(entity.transform.position, (st) =>
+                _movementComponent.MoveTo(new MoveRequest()
                 {
-                    if (st == MovementStatus.Finished) Character.Entity.AttackAsync(entity.Entity);
-                }, Character.Entity.Weapon.WeaponData.Distance);
+                        TransformTarget = entity.transform,
+                        OnFinish = (st) =>
+                        {
+                            if (st == MovementStatus.Finished) Character.Entity.AttackAsync(entity.Entity);
+                        },
+                        StoppingDistance = Character.Entity.Weapon.WeaponData.Distance
+                });
         }
     }
 }
