@@ -7,6 +7,7 @@ namespace Components.Interacting
     {
         public const int Layer = 3;
         
+        [OdinSerialize]
         public bool IsInteractable { get; set; } = true;
         
         [OdinSerialize]

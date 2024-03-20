@@ -16,7 +16,7 @@ namespace Components.Entity
             Entity = entity;
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             Characteristic?.Apply(Entity);
         }

@@ -39,5 +39,10 @@ namespace Components.Entity.Character
                         StoppingDistance = Character.Entity.Weapon.WeaponData.Distance
                 });
         }
+        
+        private void OnDestroy()
+        {
+            _clickEventTransfer.InteractableObjectInvoked -= MouseClicked;
+        }
     }
 }

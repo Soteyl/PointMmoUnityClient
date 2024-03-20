@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6486291881466765562}
-  - component: {fileID: 313297737829233306}
   - component: {fileID: 820052789442099503}
+  - component: {fileID: 6346235445507566317}
   m_Layer: 3
   m_Name: Attacker
   m_TagString: Untagged
@@ -33,35 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8346701487561006864}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &313297737829233306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 219456165753502937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62cf6eed59854a3482aa193d984109e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 2421303179216561489}
-    - {fileID: 820052789442099503}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: CharacterTriggerRunner
-      Entry: 10
-      Data: 0
-    - Name: _characterAttacker
-      Entry: 10
-      Data: 1
 --- !u!114 &820052789442099503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +62,34 @@ MonoBehaviour:
     - Name: _enemyComponent
       Entry: 10
       Data: 1
+--- !u!114 &6346235445507566317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 219456165753502937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50b832acc9bd4fa8bad2b3038961ce2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 4197324369630592480}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: State
+      Entry: 6
+      Data: 
+    - Name: EnemyHub
+      Entry: 10
+      Data: 0
 --- !u!1 &1580686634838716376
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,6 +931,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
+    - Name: IsInteractable
+      Entry: 5
+      Data: true
     - Name: Type
       Entry: 3
       Data: 1
