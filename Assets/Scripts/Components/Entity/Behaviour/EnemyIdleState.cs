@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Components.Entity.Enemy;
-using Components.Entity.Enemy.Behaviour;
 using MEC;
 using UnityEngine;
 

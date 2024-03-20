@@ -3,7 +3,7 @@ using Components.Entity.Character;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
-namespace Components.Entity.Enemy.Behaviour
+namespace Components.Entity.Enemy
 {
     public class EnemyBehaviour: SerializedMonoBehaviour
     {

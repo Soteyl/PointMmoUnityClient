@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Ui/Styles/aha.uss?fileID=7433441132597879392&amp;guid=4941a9cb5af8d48309f04fc575210691&amp;type=3#aha" />
+    <ui:VisualElement name="Panel" class="haha" style="flex-grow: 1;">
+        <ui:Label tabindex="-1" text="Inventory" parse-escape-sequences="true" display-tooltip-when-elided="true" name="label" />
+        <ui:ListView focusable="true" name="InventoryItems" style="background-color: rgb(161, 119, 98); height: 80%; width: 90%; align-items: center; align-self: center;" />
+    </ui:VisualElement>
+</ui:UXML>

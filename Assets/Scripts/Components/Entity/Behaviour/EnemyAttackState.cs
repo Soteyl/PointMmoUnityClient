@@ -1,6 +1,5 @@
 using Components.Entity.Character;
 using Components.Entity.Enemy;
-using Components.Entity.Enemy.Behaviour;
 
 namespace Components.Entity.Behaviour
 {
