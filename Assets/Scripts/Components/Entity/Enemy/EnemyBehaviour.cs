@@ -1,3 +1,4 @@
+using System;
 using Components.Entity.Behaviour;
 using Components.Entity.Character;
 using Sirenix.OdinInspector;
@@ -28,6 +29,11 @@ namespace Components.Entity.Enemy
         {
             State?.Dispose();
             State = new EnemyIdleState(this, EnemyHub);
+        }
+
+        private void OnDestroy()
+        {
+            State?.Dispose();
         }
     }
 }
