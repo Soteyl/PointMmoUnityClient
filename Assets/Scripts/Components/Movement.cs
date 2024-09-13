@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Business.Multipliers;
-using Components;
 using Components.Entity;
 using MEC;
 using UnityEngine;
@@ -12,6 +11,7 @@ namespace Components
     public class Movement: MonoBehaviour
     {
         private CoroutineHandle _moveCoroutine;
+        private bool _isMoving;
         
         [SerializeField]
         private EntityComponent entity;
@@ -20,6 +20,19 @@ namespace Components
         private NavMeshAgent navMeshAgent;
 
         private Action<MovementStatus> _actionOnFinishMove;
+
+        public bool IsMoving
+        {
+            get => _isMoving;
+            set
+            {
+                if (value != _isMoving)
+                    MoveStatusChanged?.Invoke(this, new MoveStatusChangedEventArgs(){ IsMoving = value });
+                _isMoving = value;
+            }
+        }
+
+        public event EventHandler<MoveStatusChangedEventArgs> MoveStatusChanged;
 
         public float StoppingDistance => navMeshAgent.stoppingDistance;
 
@@ -56,21 +69,33 @@ namespace Components
 
         private IEnumerator<float> _WaitUntilFinishMove(Func<Vector3> positionFunc, float? stoppingDistance = null)
         {
-            do
+            var position = stoppingDistance.HasValue
+                    ? GetPointNearTarget(transform.position, positionFunc(), stoppingDistance.Value) : positionFunc();
+            navMeshAgent.SetDestination(position);
+            
+            if (!IsNearTarget())
+                IsMoving = true;
+            
+            while (navMeshAgent.isActiveAndEnabled && !IsNearTarget())
             {
-                var position = stoppingDistance.HasValue
-                        ? GetPointNearTarget(transform.position, positionFunc(), stoppingDistance.Value) : positionFunc();
-                navMeshAgent.SetDestination(position);
-                
                 yield return Timing.WaitForOneFrame;
+                
+                position = stoppingDistance.HasValue
+                    ? GetPointNearTarget(transform.position, positionFunc(), stoppingDistance.Value) : positionFunc();
+                navMeshAgent.SetDestination(position);
             }
-            while (navMeshAgent.isActiveAndEnabled && navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance * 1.02f);
                 
             if (navMeshAgent.isActiveAndEnabled)
                 navMeshAgent.ResetPath();
 
             _actionOnFinishMove?.Invoke(MovementStatus.Finished);
             _actionOnFinishMove = null;
+            IsMoving = false;
+        }
+        
+        private bool IsNearTarget()
+        {
+            return navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance * 1.02f;
         }
         
         private Vector3 GetPointNearTarget(Vector3 currentPosition, Vector3 targetPosition, float stoppingDistance)
@@ -83,6 +108,7 @@ namespace Components
         private void OnDestroy()
         {
             Timing.KillCoroutines(_moveCoroutine);
+            IsMoving = false;
         }
     }
 
@@ -104,5 +130,10 @@ namespace Components
         public Action<MovementStatus> OnFinish { get; set; }
     
         public float? StoppingDistance { get; set; }
+    }
+
+    public class MoveStatusChangedEventArgs : EventArgs
+    {
+        public bool IsMoving { get; set; }
     }
 }
