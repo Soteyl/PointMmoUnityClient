@@ -18,10 +18,10 @@ namespace Components.UI
 
         [ShowInInspector] [ShowIf(nameof(EntityComponent))]
         public float CurrentHealth => Health?.Current ?? 0;
-
+        
         [ShowInInspector] [ShowIf(nameof(EntityComponent))]
         public float MaxHealth => Health?.Max.GetValue() ?? 0;
-
+        
         [OdinSerialize] [ShowIf(nameof(EntityComponent))]
         public float DefaultMaxHealth => Health?.Max.DefaultValue ?? 100;
 

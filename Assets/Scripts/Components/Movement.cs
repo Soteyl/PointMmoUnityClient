@@ -72,17 +72,18 @@ namespace Components
             var position = stoppingDistance.HasValue
                     ? GetPointNearTarget(transform.position, positionFunc(), stoppingDistance.Value) : positionFunc();
             navMeshAgent.SetDestination(position);
-            
+            yield return Timing.WaitForOneFrame;
+
             if (!IsNearTarget())
                 IsMoving = true;
             
             while (navMeshAgent.isActiveAndEnabled && !IsNearTarget())
             {
-                yield return Timing.WaitForOneFrame;
-                
                 position = stoppingDistance.HasValue
                     ? GetPointNearTarget(transform.position, positionFunc(), stoppingDistance.Value) : positionFunc();
                 navMeshAgent.SetDestination(position);
+                
+                yield return Timing.WaitForOneFrame;
             }
                 
             if (navMeshAgent.isActiveAndEnabled)

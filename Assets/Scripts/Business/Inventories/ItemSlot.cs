@@ -20,7 +20,8 @@ namespace Business.Inventories
         }
 
         public bool IsEmpty { get; private set; } = true;
-        
+        public event EventHandler<SlotChangedEventArgs> SlotChanged;
+
         public int Count { get; private set; }
 
 
@@ -33,6 +34,9 @@ namespace Business.Inventories
             
             int extra = count - _item.MaxCount + Count;
             Count = Math.Min(_item.MaxCount, Count + count);
+            
+            SlotChanged?.Invoke(this, new SlotChangedEventArgs(this));
+            
             return Math.Max(extra, 0);
         }
 
@@ -49,9 +53,10 @@ namespace Business.Inventories
             if (Count == 0)
             {
                 Item = null;
+                SlotChanged?.Invoke(this, new SlotChangedEventArgs(this));
                 return extra * -1;
             }
-
+            SlotChanged?.Invoke(this, new SlotChangedEventArgs(this));
             return 0;
         }
 

@@ -15,8 +15,8 @@ namespace Business.Inventories
 
         bool HasSpaceFor(IItemData item, int count = 1);
 
-        ItemCountChangeResult AddItem(IItemData item, int count = 1, bool failIfNotEnoughSpace = false);
+        ItemCountChangeResult AddItem(IItemData item, int count = 1, bool failIfNotEnoughSpace = false, int? slotIndex = null);
 
-        ItemCountChangeResult RemoveItem(IItemData item, int count = 1, bool failIfNotEnoughItems = false);
+        ItemCountChangeResult RemoveItem(IItemData item, int count = 1, bool failIfNotEnoughItems = false, int? slotIndex = null);
     }
 }

@@ -1,3 +1,5 @@
+using System;
+
 namespace Business.Inventories
 {
     public interface IItemSlot: IReadonlyItemSlot
@@ -22,5 +24,7 @@ namespace Business.Inventories
         int Count { get; }
         
         bool IsEmpty { get; }
+
+        event EventHandler<SlotChangedEventArgs> SlotChanged;
     }
 }

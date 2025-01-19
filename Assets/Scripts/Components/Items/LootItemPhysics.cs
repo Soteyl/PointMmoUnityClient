@@ -33,9 +33,9 @@ namespace Components.Items
         
         private void FixedUpdate()
         {
-            if (_rigidbody.velocity.y < 0)
+            if (_rigidbody.linearVelocity.y < 0)
             {
-                _rigidbody.velocity += Vector3.up * (Physics.gravity.y * (_fallMultiplier - 1) * Time.fixedDeltaTime);
+                _rigidbody.linearVelocity += Vector3.up * (Physics.gravity.y * (_fallMultiplier - 1) * Time.fixedDeltaTime);
             }
         }
         
@@ -46,7 +46,7 @@ namespace Components.Items
                 || _rigidbody.isKinematic) return;
 
             _lootItem.IsInteractable = true;
-            _rigidbody.velocity = Vector3.zero;       
+            _rigidbody.linearVelocity = Vector3.zero;       
             _rigidbody.angularVelocity = Vector3.zero;
             _rigidbody.isKinematic = true;           
         }

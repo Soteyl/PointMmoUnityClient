@@ -1,3 +1,4 @@
+using Components.Entity.Character;
 using Components.Interacting;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -10,7 +11,7 @@ namespace Components.Items
         private float _collectableRadius = 1f;
 
         [OdinSerialize]
-        private InventoryComponent _inventoryComponent;
+        private CharacterComponent _characterComponent;
 
         [OdinSerialize]
         private Movement _movement;
@@ -33,7 +34,7 @@ namespace Components.Items
                     OnFinish = (st) =>
                     {
                         if (st != MovementStatus.Finished) return;
-                        var result = _inventoryComponent.Inventory.AddItem(item.ItemData, item.Count, true);
+                        var result = _characterComponent.Character.Inventory.AddItem(item.ItemData, item.Count, true);
                         if (result.ExtraItems == 0) item.Collect();
                     },
                     StoppingDistance = _collectableRadius

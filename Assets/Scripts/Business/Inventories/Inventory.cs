@@ -28,10 +28,16 @@ namespace Business.Inventories
                    + _items.Count(x => x.IsEmpty) * item.MaxCount >= count;
         }
 
-        public ItemCountChangeResult AddItem(IItemData item, int count = 1, bool failIfNotEnoughSpace = false)
+        public ItemCountChangeResult AddItem(IItemData item, int count = 1, bool failIfNotEnoughSpace = false, int? slotIndex = null)
         {
             if (failIfNotEnoughSpace && !HasSpaceFor(item, count))
                 return new ItemCountChangeResult {ExtraItems = count, ItemData = item};
+            
+            if (slotIndex.HasValue)
+            {
+                count = _items[slotIndex.Value].Add(count);
+                if (count == 0) return new ItemCountChangeResult {ExtraItems = count, ItemData = item};
+            }
             
             count = FillSlots(_items.Where(x => !x.IsEmpty && x.Item.Id.Equals(item.Id)), item, count);
             if (count > 0)
@@ -40,10 +46,16 @@ namespace Business.Inventories
             return new ItemCountChangeResult {ExtraItems = count, ItemData = item};
         }
 
-        public ItemCountChangeResult RemoveItem(IItemData item, int count = 1, bool failIfNotEnoughItems = false)
+        public ItemCountChangeResult RemoveItem(IItemData item, int count = 1, bool failIfNotEnoughItems = false, int? slotIndex = null)
         {
             if (failIfNotEnoughItems && _items.Where(x => !x.IsEmpty && x.Item.Id.Equals(item.Id)).Sum(x => x.Count) < count)
                 return new ItemCountChangeResult {ExtraItems = count, ItemData = item};
+            
+            if (slotIndex.HasValue)
+            {
+                count = _items[slotIndex.Value].Remove(count);
+                if (count == 0) return new ItemCountChangeResult {ExtraItems = count, ItemData = item};
+            }
             
             foreach (var slot in _items.Where(x => !x.IsEmpty && x.Item.Id.Equals(item.Id)))
             {
